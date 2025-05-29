@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from '../models/user.model';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -10,94 +9,71 @@ import { environment } from 'src/environments/environment';
 })
 export class SecurityService {
 
-  theUser = new BehaviorSubject<User>(new User);
-  constructor(private http: HttpClient) { 
-    this.verifyActualSession()
+  private theUser = new BehaviorSubject<User>(new User());
+
+  constructor(private http: HttpClient) {
+    this.verifyActualSession();
+  }
+
+  login(user: User): Observable<any> {
+    return this.http.post<any>(`${environment.url_ms_security}`, user);
   }
 
   /**
-  * Realiza la petición al backend con el correo y la contraseña
-  * para verificar si existe o no en la plataforma
-  * @param infoUsuario JSON con la información de correo y contraseña
-  * @returns Respuesta HTTP la cual indica si el usuario tiene permiso de acceso
-  */
-  login(user: User): Observable<any> {
-    return this.http.post<any>(`${environment.url_ms_security}/login`, user);
+   * Valida el token de Google directamente con la API pública de Google.
+   * Retorna una Promise con el perfil validado o error si no es válido.
+   */
+  async validateGoogleToken(idToken: string): Promise<any> {
+    const url = `https://oauth2.googleapis.com/tokeninfo?id_token=${idToken}`;
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error('Token inválido');
+    }
+    return await response.json();
   }
-  /*
-  Guardar la información de usuario en el local storage
-  */
+
   saveSession(dataSesion: any) {
-    let data: User = {
+    const data: User = {
       id: dataSesion["user"]["id"],
       name: dataSesion["user"]["name"],
       email: dataSesion["user"]["email"],
       password: "",
-      //role:dataSesion["user"]["role"],
+      avatar: dataSesion["user"]["avatar"],
       token: dataSesion["token"]
     };
     localStorage.setItem('sesion', JSON.stringify(data));
     this.setUser(data);
   }
-  /**
-    * Permite actualizar la información del usuario
-    * que acabó de validarse correctamente
-    * @param user información del usuario logueado
-  */
+
   setUser(user: User) {
     this.theUser.next(user);
   }
-  /**
-  * Permite obtener la información del usuario
-  * con datos tales como el identificador y el token
-  * @returns
-  */
-  getUser() {
+
+  getUser(): Observable<User> {
     return this.theUser.asObservable();
   }
-  /**
-    * Permite obtener la información de usuario
-    * que tiene la función activa y servirá
-    * para acceder a la información del token
-*/
+
   public get activeUserSession(): User {
     return this.theUser.value;
   }
 
-
-  /**
-  * Permite cerrar la sesión del usuario
-  * que estaba previamente logueado
-  */
   logout() {
     localStorage.removeItem('sesion');
     this.setUser(new User());
   }
-  /**
-  * Permite verificar si actualmente en el local storage
-  * existe información de un usuario previamente logueado
-  */
+
   verifyActualSession() {
-    let actualSesion = this.getSessionData();
+    const actualSesion = this.getSessionData();
     if (actualSesion) {
       this.setUser(JSON.parse(actualSesion));
     }
   }
-  /**
-  * Verifica si hay una sesion activa
-  * @returns
-  */
+
   existSession(): boolean {
-    let sesionActual = this.getSessionData();
-    return (sesionActual) ? true : false;
+    return this.getSessionData() !== null;
   }
-  /**
-  * Permite obtener los dato de la sesión activa en el
-  * local storage
-  * @returns
-  */
-  getSessionData() {
-    let sesionActual = localStorage.getItem('sesion');
-    return sesionActual;
+
+  getSessionData(): string | null {
+    return localStorage.getItem('sesion');
   }
 }
