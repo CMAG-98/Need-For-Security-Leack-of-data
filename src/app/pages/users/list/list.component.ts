@@ -9,7 +9,7 @@ import Swal from 'sweetalert2';
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss']
 })
-export class ListComponent implements OnInit {
+export class UserListComponent implements OnInit {
   users: User[] = [];
 
   constructor(
