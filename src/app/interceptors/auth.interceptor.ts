@@ -13,23 +13,33 @@ import Swal from 'sweetalert2';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private securityService: SecurityService,
-    private router: Router) { }
+  constructor(
+    private securityService: SecurityService,
+    private router: Router
+  ) { }
+
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    let theUser = this.securityService.activeUserSession
-    const token = theUser["token"];
-    // Si la solicitud es para la ruta de "login", no adjuntes el token
-    if (request.url.includes('/login') || request.url.includes('/token-validation')) {
-      console.log("no se pone token")
+    let theUser = this.securityService.activeUserSession;
+    const token = theUser ? theUser["token"] : null;
+
+    // No agregar token en solicitudes OPTIONS ni en rutas de login o validación de token
+    if (
+      request.method === 'OPTIONS' ||
+      request.url.includes('/login') ||
+      request.url.includes('/token-validation')
+    ) {
+      console.log("No se pone token para esta solicitud:", request.method, request.url);
       return next.handle(request);
     } else {
-      console.log("colocando token " + token)
-      // Adjunta el token a la solicitud
+      console.log("Colocando token en solicitud:", request.method, request.url);
+
+      // Clonar la solicitud y agregar el header Authorization
       const authRequest = request.clone({
         setHeaders: {
           Authorization: `Bearer ${token}`,
         },
       });
+
       return next.handle(authRequest).pipe(
         catchError((err: HttpErrorResponse) => {
           if (err.status === 401) {
@@ -48,11 +58,8 @@ export class AuthInterceptor implements HttpInterceptor {
           }
 
           return new Observable<never>();
-
-        }));
+        })
+      );
     }
-    // Continúa con la solicitud modificada
-
   }
-
 }

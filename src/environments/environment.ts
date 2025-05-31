@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   url_ms_cinema:"https://932aea28-0e47-46d2-b426-4635b17c51cd.mock.pstmn.io",
-  url_ms_security:"http://127.0.0.1:5000"
+  url_ms_security:"http://127.0.0.1:5000/api"
 };
 
 /*

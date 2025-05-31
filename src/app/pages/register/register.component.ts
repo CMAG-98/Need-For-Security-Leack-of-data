@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { User } from 'src/app/models/user.model';
+import { LogInUser } from 'src/app/models/log-in-user.mode';
 import { SecurityService } from 'src/app/services/security.service';
 import Swal from 'sweetalert2';
 
@@ -12,15 +12,13 @@ declare const google: any;
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit, OnDestroy {
-  user: User;
+
   googleInitialized = false;
 
   constructor(
     private securityService: SecurityService,
     private router: Router
-  ) {
-    this.user = { email: "", password: "" };
-  }
+  ) {}
 
   ngOnInit(): void {
     const CLIENT_ID = "748495779149-lqrjhm1ncd6qrvsf67bt2s7sbu2vi900.apps.googleusercontent.com";
@@ -29,7 +27,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
       google.accounts.id.initialize({
         client_id: CLIENT_ID,
         callback: (response: any) => this.handleCredentialResponse(response),
-        ux_mode: "popup"  // Manteniendo popup para evitar redirect
+        ux_mode: "popup"
       });
       this.googleInitialized = true;
 
@@ -61,18 +59,18 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
     this.securityService.validateGoogleToken(googleToken)
       .then(profile => {
-        const googleUser: User = {
+        const googleUser: LogInUser = {
           id: profile.sub,
           name: profile.name,
           email: profile.email,
-          password: '',
+          avatar: profile.picture,
           token: googleToken
         };
 
         console.log("Usuario registrado con Google:", googleUser);
 
         this.securityService.saveSession({ user: googleUser, token: googleToken });
-        
+
         setTimeout(() => {
           this.router.navigate(['/dashboard']);
         }, 50);

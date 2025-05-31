@@ -20,5 +20,14 @@ export const AdminLayoutRoutes: Routes = [
                 loadChildren: () => import('src/app/pages/theaters/theaters.module').then(m => m.TheatersModule)
             }
         ]
+    },
+    {
+        path: 'users',
+        children: [
+            {
+                path: '',
+                loadChildren: () => import('src/app/pages/users/users.module').then(m => m.UsersModule)
+            }
+        ]
     }
 ];
