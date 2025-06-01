@@ -10,6 +10,7 @@ import Swal from 'sweetalert2';
   templateUrl: './manage.component.html',
   styleUrls: ['./manage.component.scss']
 })
+
 export class RoleManageComponent implements OnInit {
   mode: number; // 1: view, 2: create, 3: update
   role: Role;
@@ -50,7 +51,7 @@ export class RoleManageComponent implements OnInit {
     this.theFormGroup = this.formBuilder.group({
       id: [0],
       name: ['', [Validators.required, Validators.minLength(2)]],
-      description: ['', [Validators.required, Validators.minLength(6)]]
+      description: ['', [Validators.required, Validators.minLength(5)]]
     });
   }
 

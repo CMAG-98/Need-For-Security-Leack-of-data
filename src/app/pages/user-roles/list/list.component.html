@@ -1,1 +1,66 @@
-<p>list works!</p>
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8"></div>
+<!-- Page content -->
+<div class="container-fluid mt--7">
+  <!-- Table -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div
+          class="card-header bg-transparent d-flex justify-content-between align-items-center"
+        >
+          <h3 class="mb-0">Roles de Usuarios</h3>
+          <button class="btn btn-success btn-sm" (click)="create()">
+            Crear
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover table-bordered">
+              <thead class="thead-light">
+                <tr>
+                  <th>ID usuario</th>
+                  <th>Nombre</th>
+                  <th>Rol</th>
+                  <th>Inicio</th>
+                  <th>Fin</th>
+                  <th>Opciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let userRole of userRoles">
+                  <td>{{ userRole.user_id }}</td>
+                  <td>{{ getUserName(userRole.user_id) }}</td>
+                  <td>{{ getRoleName(userRole.role_id) }}</td>
+                  <td>{{ userRole.created_at | date : "shortDate" }}</td>
+                  <td>{{ userRole.endAt | date : "shortDate" }}</td>
+                  <td>
+                    <div class="btn-group" role="group" aria-label="Opciones">
+                      <button
+                        class="btn btn-warning btn-sm"
+                        (click)="view(userRole.id)"
+                      >
+                        Ver
+                      </button>
+                      <button
+                        class="btn btn-primary btn-sm"
+                        (click)="edit(userRole.id)"
+                      >
+                        Editar
+                      </button>
+                      <button
+                        class="btn btn-danger btn-sm"
+                        (click)="delete(userRole.id)"
+                      >
+                        Eliminar
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

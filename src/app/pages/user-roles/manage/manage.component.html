@@ -1,1 +1,170 @@
-<p>manage works!</p>
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8"></div>
+
+<div class="container-fluid mt--7">
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0" *ngIf="mode === 1">Detalle</h3>
+          <h3 class="mb-0" *ngIf="mode === 2">Crear</h3>
+          <h3 class="mb-0" *ngIf="mode === 3">Actualizar</h3>
+        </div>
+
+        <div class="card-body">
+          <form [formGroup]="theFormGroup">
+            <div class="container">
+              <!-- Usuario -->
+              <!-- Usuario -->
+              <div class="row mb-3">
+                <label class="col-3 col-form-label">Usuario</label>
+                <div class="col-9">
+                  <select
+                    class="form-control"
+                    formControlName="id_user"
+                    [disabled]="mode === 1"
+                  >
+                    <option *ngIf="users.length === 0" disabled selected>
+                      Cargando usuarios...
+                    </option>
+                    <option *ngIf="users.length > 0" value="" disabled selected>
+                      Seleccione un usuario
+                    </option>
+                    <option *ngFor="let user of users" [value]="user.id">
+                      {{ user.name }}
+                    </option>
+                  </select>
+                  <div
+                    *ngIf="
+                      getTheFormGroup.id_user.errors &&
+                      (getTheFormGroup.id_user.touched || trySend)
+                    "
+                  >
+                    <strong
+                      *ngIf="getTheFormGroup.id_user.errors.required"
+                      class="msnError"
+                      >Requerido</strong
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <!-- Rol -->
+              <div class="row mb-3">
+                <label class="col-3 col-form-label">Rol</label>
+                <div class="col-9">
+                  <select
+                    class="form-control"
+                    formControlName="id_role"
+                    [disabled]="mode === 1"
+                  >
+                    <option *ngIf="roles.length === 0" disabled selected>
+                      Cargando roles...
+                    </option>
+                    <option *ngIf="roles.length > 0" value="" disabled selected>
+                      Seleccione un rol
+                    </option>
+                    <option *ngFor="let role of roles" [value]="role.id">
+                      {{ role.name }}
+                    </option>
+                  </select>
+                  <div
+                    *ngIf="
+                      getTheFormGroup.id_role.errors &&
+                      (getTheFormGroup.id_role.touched || trySend)
+                    "
+                  >
+                    <strong
+                      *ngIf="getTheFormGroup.id_role.errors.required"
+                      class="msnError"
+                      >Requerido</strong
+                    >
+                  </div>
+                </div>
+              </div>
+              <!-- Inicio -->
+              <div class="row mb-3">
+                <label class="col-3 col-form-label">Inicio</label>
+                <div class="col-9">
+                  <input
+                    type="datetime-local"
+                    class="form-control"
+                    formControlName="startAt"
+                    [readonly]="mode === 1"
+                  />
+                  <div
+                    *ngIf="
+                      getTheFormGroup.startAt.errors &&
+                      (getTheFormGroup.startAt.touched || trySend)
+                    "
+                  >
+                    <strong
+                      *ngIf="getTheFormGroup.startAt.errors.required"
+                      class="msnError"
+                      >Requerido</strong
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fin -->
+              <div class="row mb-4">
+                <label class="col-3 col-form-label">Fin</label>
+                <div class="col-9">
+                  <input
+                    type="datetime-local"
+                    class="form-control"
+                    formControlName="endAt"
+                    [readonly]="mode === 1"
+                  />
+                  <div
+                    *ngIf="
+                      getTheFormGroup.endAt.errors &&
+                      (getTheFormGroup.endAt.touched || trySend)
+                    "
+                  >
+                    <strong
+                      *ngIf="getTheFormGroup.endAt.errors.required"
+                      class="msnError"
+                      >Requerido</strong
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <!-- Botones -->
+              <div class="row">
+                <div class="col-3"></div>
+                <div class="col-9">
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    (click)="back()"
+                    *ngIf="mode === 1"
+                  >
+                    Regresar
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-success"
+                    (click)="create()"
+                    *ngIf="mode === 2"
+                  >
+                    Crear
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-warning"
+                    (click)="update()"
+                    *ngIf="mode === 3"
+                  >
+                    Actualizar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
