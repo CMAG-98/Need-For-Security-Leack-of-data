@@ -16,13 +16,11 @@ import { forkJoin } from 'rxjs';
   styleUrls: ['./manage.component.scss']
 })
 export class UserRoleManageComponent implements OnInit {
-  userRoles: UserRole[] = [];
+  userRole: UserRole | null = null;
   users: User[] = [];
   roles: Role[] = [];
 
-  userRole: UserRole | null = null;
   theFormGroup: FormGroup;
-
   mode: number = 0; // 1=ver, 2=crear, 3=editar
   trySend: boolean = false;
 
@@ -42,12 +40,11 @@ export class UserRoleManageComponent implements OnInit {
       id_user: ['', Validators.required],
       id_role: ['', Validators.required],
       startAt: ['', Validators.required],
-      endAt: ['']
+      endAt: ['', Validators.required]
     });
   }
 
-  ngOnInit() {
-    // Cargo usuarios y roles en paralelo
+  ngOnInit(): void {
     forkJoin({
       users: this.userService.list(),
       roles: this.roleService.list()
@@ -56,7 +53,6 @@ export class UserRoleManageComponent implements OnInit {
         this.users = users;
         this.roles = roles;
 
-        // Defino el modo después de cargar users y roles
         const currentUrl = this.activatedRoute.snapshot.url.join('/');
         if (currentUrl.includes('view')) {
           this.mode = 1;
@@ -93,7 +89,6 @@ export class UserRoleManageComponent implements OnInit {
         });
 
         this.updateSelectedUserAndRoleNames();
-
         this.updateFormState();
       },
       error: (error) => {
@@ -159,6 +154,7 @@ export class UserRoleManageComponent implements OnInit {
 
   update() {
     this.trySend = true;
+
     if (this.theFormGroup.invalid) {
       Swal.fire('Error', 'Por favor, complete todos los campos requeridos.', 'error');
       return;

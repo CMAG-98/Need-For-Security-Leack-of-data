@@ -30,7 +30,7 @@ export class UserRoleService {
   }
 
 
-  private formatDateTime(dateString: string): string {
+  private formatDateTime(dateString: string | Date): string {
     const date = new Date(dateString);
     const pad = (n: number) => n.toString().padStart(2, '0');
     return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
@@ -38,6 +38,13 @@ export class UserRoleService {
 
 
   update(userRole: UserRole): Observable<UserRole> {
+    const formattedData = {
+      ...userRole,
+      startAt: this.formatDateTime(userRole.startAt),
+      endAt: userRole.endAt ? this.formatDateTime(userRole.endAt) : null
+    };
+
+
     return this.http.put<UserRole>(`${environment.url_ms_security}/user-roles/${userRole.id}`, userRole);
   }
 

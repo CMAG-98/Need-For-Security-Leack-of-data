@@ -14,7 +14,6 @@
           <form [formGroup]="theFormGroup">
             <div class="container">
               <!-- Usuario -->
-              <!-- Usuario -->
               <div class="row mb-3">
                 <label class="col-3 col-form-label">Usuario</label>
                 <div class="col-9">
@@ -23,10 +22,10 @@
                     formControlName="id_user"
                     [disabled]="mode === 1"
                   >
-                    <option *ngIf="users.length === 0" disabled selected>
+                    <option *ngIf="users.length === 0" disabled>
                       Cargando usuarios...
                     </option>
-                    <option *ngIf="users.length > 0" value="" disabled selected>
+                    <option *ngIf="users.length > 0" value="" disabled>
                       Seleccione un usuario
                     </option>
                     <option *ngFor="let user of users" [value]="user.id">
@@ -57,16 +56,17 @@
                     formControlName="id_role"
                     [disabled]="mode === 1"
                   >
-                    <option *ngIf="roles.length === 0" disabled selected>
+                    <option *ngIf="roles.length === 0" disabled>
                       Cargando roles...
                     </option>
-                    <option *ngIf="roles.length > 0" value="" disabled selected>
+                    <option *ngIf="roles.length > 0" value="" disabled>
                       Seleccione un rol
                     </option>
                     <option *ngFor="let role of roles" [value]="role.id">
                       {{ role.name }}
                     </option>
                   </select>
+
                   <div
                     *ngIf="
                       getTheFormGroup.id_role.errors &&

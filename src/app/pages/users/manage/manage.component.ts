@@ -49,7 +49,7 @@ export class UserManageComponent implements OnInit {
 
   configFormGroup() {
     this.theFormGroup = this.formBuilder.group({
-      id: [0],
+      id: [''],
       name: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
