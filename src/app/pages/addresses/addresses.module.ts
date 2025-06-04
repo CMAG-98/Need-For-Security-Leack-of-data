@@ -2,18 +2,23 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { AddressesRoutingModule } from './addresses-routing.module';
-import { ManageComponent } from './manage/manage.component';
-import { ListComponent } from './list/list.component';
+import { AddressManageComponent } from './manage/manage.component';
+import { AddressListComponent } from './list/list.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
 
 @NgModule({
   declarations: [
-    ManageComponent,
-    ListComponent
+    AddressManageComponent,
+    AddressListComponent
   ],
   imports: [
     CommonModule,
-    AddressesRoutingModule
+    FormsModule,
+    ReactiveFormsModule,
+    AddressesRoutingModule,
+    LeafletModule
   ]
 })
 export class AddressesModule { }

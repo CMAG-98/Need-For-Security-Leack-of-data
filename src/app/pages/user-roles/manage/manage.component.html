@@ -7,11 +7,10 @@
         <div class="card-header bg-transparent">
           <h3 class="mb-0" *ngIf="mode === 1">Detalle</h3>
           <h3 class="mb-0" *ngIf="mode === 2">Crear</h3>
-          <h3 class="mb-0" *ngIf="mode === 3">Actualizar</h3>
         </div>
 
         <div class="card-body">
-          <form [formGroup]="theFormGroup">
+          <form [formGroup]="theFormGroup" (ngSubmit)="mode === 2 ? create() : null">
             <div class="container">
               <!-- Usuario -->
               <div class="row mb-3">
@@ -21,28 +20,28 @@
                     class="form-control"
                     formControlName="id_user"
                     [disabled]="mode === 1"
+                    [class.is-invalid]="trySend && getTheFormGroup.id_user.invalid"
                   >
-                    <option *ngIf="users.length === 0" disabled>
-                      Cargando usuarios...
-                    </option>
-                    <option *ngIf="users.length > 0" value="" disabled>
+                    <option value="" disabled>
                       Seleccione un usuario
                     </option>
-                    <option *ngFor="let user of users" [value]="user.id">
+                    <option *ngFor="let user of users" [value]="user_id">
                       {{ user.name }}
                     </option>
                   </select>
                   <div
-                    *ngIf="
-                      getTheFormGroup.id_user.errors &&
-                      (getTheFormGroup.id_user.touched || trySend)
-                    "
+                    class="row mb-3"
+                    *ngIf="getTheFormGroup.id_user.errors && trySend"
                   >
-                    <strong
-                      *ngIf="getTheFormGroup.id_user.errors.required"
-                      class="msnError"
-                      >Requerido</strong
-                    >
+                    <div class="col-3"></div>
+                    <div class="col-9">
+                      <strong
+                        *ngIf="getTheFormGroup.id_user.errors.required"
+                        class="msnError"
+                      >
+                        Usuario requerido
+                      </strong>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -55,32 +54,32 @@
                     class="form-control"
                     formControlName="id_role"
                     [disabled]="mode === 1"
+                    [class.is-invalid]="trySend && getTheFormGroup.id_role.invalid"
                   >
-                    <option *ngIf="roles.length === 0" disabled>
-                      Cargando roles...
-                    </option>
-                    <option *ngIf="roles.length > 0" value="" disabled>
+                    <option value="" disabled>
                       Seleccione un rol
                     </option>
-                    <option *ngFor="let role of roles" [value]="role.id">
+                    <option *ngFor="let role of roles" [value]="role_id">
                       {{ role.name }}
                     </option>
                   </select>
-
                   <div
-                    *ngIf="
-                      getTheFormGroup.id_role.errors &&
-                      (getTheFormGroup.id_role.touched || trySend)
-                    "
+                    class="row mb-3"
+                    *ngIf="getTheFormGroup.id_role.errors && trySend"
                   >
-                    <strong
-                      *ngIf="getTheFormGroup.id_role.errors.required"
-                      class="msnError"
-                      >Requerido</strong
-                    >
+                    <div class="col-3"></div>
+                    <div class="col-9">
+                      <strong
+                        *ngIf="getTheFormGroup.id_role.errors.required"
+                        class="msnError"
+                      >
+                        Rol requerido
+                      </strong>
+                    </div>
                   </div>
                 </div>
               </div>
+
               <!-- Inicio -->
               <div class="row mb-3">
                 <label class="col-3 col-form-label">Inicio</label>
@@ -90,6 +89,7 @@
                     class="form-control"
                     formControlName="startAt"
                     [readonly]="mode === 1"
+                    [class.is-invalid]="trySend && getTheFormGroup.startAt.invalid"
                   />
                   <div
                     *ngIf="
@@ -116,18 +116,6 @@
                     formControlName="endAt"
                     [readonly]="mode === 1"
                   />
-                  <div
-                    *ngIf="
-                      getTheFormGroup.endAt.errors &&
-                      (getTheFormGroup.endAt.touched || trySend)
-                    "
-                  >
-                    <strong
-                      *ngIf="getTheFormGroup.endAt.errors.required"
-                      class="msnError"
-                      >Requerido</strong
-                    >
-                  </div>
                 </div>
               </div>
 
@@ -144,20 +132,11 @@
                     Regresar
                   </button>
                   <button
-                    type="button"
+                    type="submit"
                     class="btn btn-success"
-                    (click)="create()"
                     *ngIf="mode === 2"
                   >
                     Crear
-                  </button>
-                  <button
-                    type="button"
-                    class="btn btn-warning"
-                    (click)="update()"
-                    *ngIf="mode === 3"
-                  >
-                    Actualizar
                   </button>
                 </div>
               </div>

@@ -37,17 +37,6 @@ export class UserRoleService {
   }
 
 
-  update(userRole: UserRole): Observable<UserRole> {
-    const formattedData = {
-      ...userRole,
-      startAt: this.formatDateTime(userRole.startAt),
-      endAt: userRole.endAt ? this.formatDateTime(userRole.endAt) : null
-    };
-
-
-    return this.http.put<UserRole>(`${environment.url_ms_security}/user-roles/${userRole.id}`, userRole);
-  }
-
   delete(id: string): Observable<UserRole> {
     return this.http.delete<UserRole>(`${environment.url_ms_security}/user-roles/${id}`);
   }

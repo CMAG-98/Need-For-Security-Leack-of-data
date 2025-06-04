@@ -57,4 +57,13 @@ export const AdminLayoutRoutes: Routes = [
             }
         ]
     },
+        {
+        path: 'address',
+        children: [
+            {
+                path: '',
+                loadChildren: () => import('src/app/pages/addresses/addresses.module').then(m => m.AddressesModule)
+            }
+        ]
+    },
 ];

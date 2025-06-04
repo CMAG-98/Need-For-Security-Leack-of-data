@@ -15,8 +15,7 @@ import { ComponentsModule } from './components/components.module';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { AuthenticatedGuard } from './guards/authenticated.guard';
 import { NoAuthenticatedGuard } from './guards/no-authenticated.guard';
-
-
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
 
 
@@ -28,7 +27,8 @@ import { NoAuthenticatedGuard } from './guards/no-authenticated.guard';
     ComponentsModule,
     NgbModule,
     RouterModule,
-    AppRoutingModule
+    AppRoutingModule,
+    LeafletModule
   ],
   declarations: [
     AppComponent,

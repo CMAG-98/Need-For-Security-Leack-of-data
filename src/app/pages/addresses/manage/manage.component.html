@@ -1,1 +1,152 @@
-<p>manage works!</p>
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8"></div>
+
+<div class="container-fluid mt--7">
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0" *ngIf="mode === 1">Detalle de Dirección</h3>
+          <h3 class="mb-0" *ngIf="mode === 2">Crear Dirección</h3>
+          <h3 class="mb-0" *ngIf="mode === 3">Actualizar Dirección</h3>
+        </div>
+
+        <div class="card-body">
+          <form [formGroup]="theFormGroup">
+            <div class="container">
+              <!-- Mapa Interactivo -->
+              <div class="row mb-3">
+                <label class="col-3 col-form-label">Ubicación en el Mapa</label>
+                <div class="col-9">
+                  <div
+                    id="map"
+                    leaflet
+                    [leafletOptions]="options"
+                    [leafletLayers]="layers"
+                    (leafletClick)="onMapClick($event)"
+                    style="height: 300px"
+                  ></div>
+                  <small class="text-muted">Haz clic en el mapa para seleccionar una ubicación.</small>
+                </div>
+              </div>
+
+              <!-- Latitud -->
+              <div class="row mb-3">
+                <label class="col-3 col-form-label">Latitud</label>
+                <div class="col-9">
+                  <input
+                    type="number"
+                    class="form-control"
+                    formControlName="latitude"
+                    readonly
+                  />
+                </div>
+              </div>
+
+              <div class="row mb-3" *ngIf="getTheFormGroup.latitude.errors && trySend">
+                <div class="col-3"></div>
+                <div class="col-9">
+                  <strong *ngIf="getTheFormGroup.latitude.errors.required" class="msnError">
+                    Latitud requerida
+                  </strong>
+                </div>
+              </div>
+
+              <!-- Longitud -->
+              <div class="row mb-3">
+                <label class="col-3 col-form-label">Longitud</label>
+                <div class="col-9">
+                  <input
+                    type="number"
+                    class="form-control"
+                    formControlName="longitude"
+                    readonly
+                  />
+                </div>
+              </div>
+
+              <div class="row mb-3" *ngIf="getTheFormGroup.longitude.errors && trySend">
+                <div class="col-3"></div>
+                <div class="col-9">
+                  <strong *ngIf="getTheFormGroup.longitude.errors.required" class="msnError">
+                    Longitud requerida
+                  </strong>
+                </div>
+              </div>
+
+              <!-- Calle -->
+              <div class="row mb-3">
+                <label class="col-3 col-form-label">Calle</label>
+                <div class="col-9">
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="street"
+                  />
+                  <div
+                    *ngIf="getTheFormGroup.street.errors && (getTheFormGroup.street.dirty || getTheFormGroup.street.touched || trySend)"
+                  >
+                    <strong *ngIf="getTheFormGroup.street.errors.required" class="msnError">Requerido</strong>
+                    <strong *ngIf="getTheFormGroup.street.errors.minlength" class="msnError">Mínimo 3 caracteres</strong>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Número -->
+              <div class="row mb-3">
+                <label class="col-3 col-form-label">Número</label>
+                <div class="col-9">
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="number"
+                  />
+                  <div
+                    *ngIf="getTheFormGroup.number.errors && (getTheFormGroup.number.dirty || getTheFormGroup.number.touched || trySend)"
+                  >
+                    <strong *ngIf="getTheFormGroup.number.errors.required" class="msnError">Requerido</strong>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Usuario -->
+              <div class="row mb-3">
+                <label class="col-3 col-form-label">Usuario</label>
+                <div class="col-9">
+                  <select class="form-control" formControlName="user_id">
+                    <option value="" disabled selected>Seleccione un usuario</option>
+                    <option *ngFor="let user of users" [value]="user.id">{{ user.name }}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row mb-3" *ngIf="getTheFormGroup.user_id.errors && trySend">
+                <div class="col-3"></div>
+                <div class="col-9">
+                  <strong *ngIf="getTheFormGroup.user_id.errors.required" class="msnError">
+                    Usuario requerido
+                  </strong>
+                </div>
+              </div>
+
+              <!-- Botones -->
+              <div class="row">
+                <div class="col-3"></div>
+                <div class="col-9">
+                  <button type="button" class="btn btn-primary" (click)="back()" *ngIf="mode === 1">
+                    Regresar
+                  </button>
+                  <button type="button" class="btn btn-success" (click)="create()" *ngIf="mode === 2">
+                    Crear
+                  </button>
+                  <button type="button" class="btn btn-warning" (click)="update()" *ngIf="mode === 3">
+                    Actualizar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

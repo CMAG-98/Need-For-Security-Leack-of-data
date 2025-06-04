@@ -1,1 +1,74 @@
-<p>list works!</p>
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8"></div>
+
+<!-- Page content -->
+<div class="container-fluid mt--7">
+  <!-- Table -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div
+          class="card-header bg-transparent d-flex justify-content-between align-items-center"
+        >
+          <h3 class="mb-0">Direcciones</h3>
+          <button class="btn btn-success btn-sm" (click)="create()">
+            Crear
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover table-bordered">
+              <thead class="thead-light">
+                <tr>
+                  <th>ID</th>
+                  <th>Calle</th>
+                  <th>Número</th>
+                  <th>Latitud</th>
+                  <th>Longitud</th>
+                  <th>Usuario</th>
+                  <th>Opciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let address of addresses">
+                  <td>{{ address.id }}</td>
+                  <td>{{ address.street }}</td>
+                  <td>{{ address.number }}</td>
+                  <td>{{ address.latitude }}</td>
+                  <td>{{ address.longitude }}</td>
+                  <td>{{ getUserName(address.user_id) }}</td>
+                  <td>
+                    <div class="btn-group" role="group" aria-label="Opciones">
+                      <button
+                        class="btn btn-warning btn-sm"
+                        (click)="view(address.id)"
+                      >
+                        Ver
+                      </button>
+                      <button
+                        class="btn btn-primary btn-sm"
+                        (click)="edit(address.id)"
+                      >
+                        Editar
+                      </button>
+                      <button
+                        class="btn btn-danger btn-sm"
+                        (click)="delete(address.id)"
+                      >
+                        Eliminar
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- Mostrar mensaje si no hay direcciones -->
+            <div *ngIf="addresses.length === 0" class="text-center mt-3">
+              <p class="text-muted">No hay direcciones registradas.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

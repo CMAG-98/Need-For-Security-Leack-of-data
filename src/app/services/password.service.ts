@@ -26,9 +26,6 @@ export class PasswordService {
       endAt: password.endAt ? this.formatDateTime(password.endAt) : null
     };
 
-    console.log(formattedData);
-
-
     return this.http.post(`${environment.url_ms_security}/passwords/user/${userId}`, formattedData);
   }
 

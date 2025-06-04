@@ -21,7 +21,7 @@ export class UserRoleManageComponent implements OnInit {
   roles: Role[] = [];
 
   theFormGroup: FormGroup;
-  mode: number = 0; // 1=ver, 2=crear, 3=editar
+  mode: number = 0; // 1=ver, 2=crear
   trySend: boolean = false;
 
   selectedUserName: string = '';
@@ -53,21 +53,18 @@ export class UserRoleManageComponent implements OnInit {
         this.users = users;
         this.roles = roles;
 
-        const currentUrl = this.activatedRoute.snapshot.url.join('/');
-        if (currentUrl.includes('view')) {
-          this.mode = 1;
-        } else if (currentUrl.includes('create')) {
-          this.mode = 2;
-        } else if (currentUrl.includes('update')) {
-          this.mode = 3;
-        }
-
-        this.updateFormState();
-
         const userRoleId = this.activatedRoute.snapshot.params.id;
         if (userRoleId) {
           this.getUserRole(userRoleId);
+          this.mode = 1; // Solo ver si hay id
+        } else {
+          this.mode = 2; // Crear
+          this.updateFormState();
         }
+
+        // Actualizar nombres visibles al cambiar selects
+        this.theFormGroup.get('id_user')?.valueChanges.subscribe(() => this.updateSelectedUserAndRoleNames());
+        this.theFormGroup.get('id_role')?.valueChanges.subscribe(() => this.updateSelectedUserAndRoleNames());
       },
       error: (err) => {
         console.error('Error cargando usuarios o roles:', err);
@@ -98,20 +95,17 @@ export class UserRoleManageComponent implements OnInit {
   }
 
   updateSelectedUserAndRoleNames() {
-    if (!this.userRole) {
-      this.selectedUserName = '';
-      this.selectedRoleName = '';
-      return;
-    }
+    const userId = this.theFormGroup.get('id_user')?.value;
+    const roleId = this.theFormGroup.get('id_role')?.value;
 
-    const user = this.users.find(u => u.id === this.userRole!.id_user);
-    const role = this.roles.find(r => r.id === this.userRole!.id_role);
+    const user = this.users.find(u => u.id === userId);
+    const role = this.roles.find(r => r.id === roleId);
 
-    this.selectedUserName = user ? user.name : 'Desconocido';
-    this.selectedRoleName = role ? role.name : 'Desconocido';
+    this.selectedUserName = user ? user.name : '';
+    this.selectedRoleName = role ? role.name : '';
   }
 
-  private formatDateToInputString(date: Date): string {
+  private formatDateToInputString(date: Date | string): string {
     const d = new Date(date);
     const pad = (n: number) => n.toString().padStart(2, '0');
     return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
@@ -141,28 +135,9 @@ export class UserRoleManageComponent implements OnInit {
     const userId = formValue.id_user;
     const roleId = formValue.id_role;
 
-    console.log('📤 Datos enviados al backend:', formValue);
-
     this.userRoleService.create(formValue, userId, roleId).subscribe({
       next: () => {
         Swal.fire('Creado', 'Rol de usuario creado correctamente.', 'success');
-        this.router.navigate(['/user-roles/list']);
-      },
-      error: (err) => console.error(err)
-    });
-  }
-
-  update() {
-    this.trySend = true;
-
-    if (this.theFormGroup.invalid) {
-      Swal.fire('Error', 'Por favor, complete todos los campos requeridos.', 'error');
-      return;
-    }
-
-    this.userRoleService.update(this.theFormGroup.value).subscribe({
-      next: () => {
-        Swal.fire('Actualizado', 'Rol de usuario actualizado correctamente.', 'success');
         this.router.navigate(['/user-roles/list']);
       },
       error: (err) => console.error(err)
