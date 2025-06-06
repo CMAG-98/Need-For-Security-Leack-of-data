@@ -19,6 +19,10 @@ export class PasswordService {
     return this.http.get<Password>(`${environment.url_ms_security}/passwords/${id}`);
   }
 
+  getByUserId(userId: number): Observable<Password[]> {
+    return this.http.get<Password[]>(`${environment.url_ms_security}/passwords/user/${userId}`);
+  }
+
   create(password: any, userId: number): Observable<any> {
     const formattedData = {
       ...password,

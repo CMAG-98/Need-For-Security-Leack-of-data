@@ -16,6 +16,7 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { AuthenticatedGuard } from './guards/authenticated.guard';
 import { NoAuthenticatedGuard } from './guards/no-authenticated.guard';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { PasswordListByUserComponent } from './pages/passwords/password-list-by-user/password-list-by-user.component';
 
 
 
@@ -33,7 +34,8 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
   declarations: [
     AppComponent,
     AdminLayoutComponent,
-    AuthLayoutComponent
+    AuthLayoutComponent,
+    PasswordListByUserComponent,
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

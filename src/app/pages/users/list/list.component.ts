@@ -44,6 +44,10 @@ export class UserListComponent implements OnInit {
     this.router.navigate(['/users/update/' + id]);
   }
 
+  viewPasswords(id: number): void {
+    this.router.navigate(['/passwords/user', id]);
+  }
+
   delete(id: number): void {
     Swal.fire({
       title: 'Eliminar usuario',

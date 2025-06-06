@@ -7,7 +7,7 @@ const routes: Routes = [
   { path: 'list', component: UserListComponent },
   { path: 'create', component: UserManageComponent },
   { path: 'view/:id', component: UserManageComponent },
-  { path: 'update/:id', component: UserManageComponent }
+  { path: 'update/:id', component: UserManageComponent },
 ];
 
 @NgModule({
