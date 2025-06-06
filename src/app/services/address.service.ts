@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class AddressService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   list(): Observable<Address[]> {
     return this.http.get<Address[]>(`${environment.url_ms_security}/addresses`);
@@ -18,10 +18,15 @@ export class AddressService {
     return this.http.get<Address>(`${environment.url_ms_security}/addresses/${id}`);
   }
 
+  getByUserId(userId: number): Observable<Address> {
+    return this.http.get<Address>(`${environment.url_ms_security}/addresses/user/${userId}`);
+  }
+
+
   create(newAddress: Address, userId: string): Observable<Address> {
     delete newAddress.id;  // Evita enviar el ID si es undefined
     console.log(newAddress);
-    
+
     return this.http.post<Address>(`${environment.url_ms_security}/addresses/user/${userId}`, newAddress);
   }
 
