@@ -55,6 +55,10 @@ export class UserListComponent implements OnInit {
     this.router.navigate(['/users/user-roles/user', userId]);
   }
 
+  viewDigitalSignature(userId: number): void {
+    this.router.navigate(['/signatures/view', userId]);
+  }
+
   delete(id: number): void {
     Swal.fire({
       title: 'Eliminar usuario',

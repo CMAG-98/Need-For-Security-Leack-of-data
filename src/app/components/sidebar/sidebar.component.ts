@@ -22,7 +22,7 @@ export const ROUTES: RouteInfo[] = [
   { path: '/users/list', title: 'Usuarios', icon: 'ni-user-run text-primary', class: '', type: 1 },
   { path: '/devices/list', title: 'Dispositivos', icon: 'ni-camera-compact text-primary', class: '', type: 1 },
   { path: '/questions/list', title: 'Preguntas', icon: 'ni-send text-primary', class: '', type: 1 },
-  { path: '/signatures/list', title: 'Firmas', icon: 'ni-badge text-primary', class: '', type: 1 },
+  // { path: '/signatures/list', title: 'Firmas', icon: 'ni-badge text-primary', class: '', type: 1 },
   { path: '/roles/list', title: 'Roles', icon: 'ni-controller text-red', class: '', type: 1 },
   { path: '/user-roles/list', title: 'Roles de usuarios', icon: 'ni-settings text-purple', class: '', type: 1 },
   { path: '/passwords/list', title: 'Contraseñas', icon: 'ni-key-25 text-green', class: '', type: 1 },
