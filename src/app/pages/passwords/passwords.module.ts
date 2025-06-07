@@ -7,10 +7,11 @@ import { PasswordListComponent } from './list/list.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
+
 @NgModule({
   declarations: [
     PasswordManageComponent,
-    PasswordListComponent
+    PasswordListComponent,
   ],
   imports: [
     CommonModule,

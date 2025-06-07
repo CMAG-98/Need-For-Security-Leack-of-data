@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UserRole } from '../models/user-role.mode';
 import { environment } from 'src/environments/environment';
+import { User } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +30,13 @@ export class UserRoleService {
     return this.http.post(`${environment.url_ms_security}/user-roles/user/${userId}/role/${roleId}`, formattedData);
   }
 
+  getUserByRol(roleId: number): Observable<UserRole[]> {
+    return this.http.get<UserRole[]>(`${environment.url_ms_security}/user-roles/role/${roleId}`);
+  }
+
+  getRoleByUser(userId: number): Observable<UserRole[]> {
+    return this.http.get<UserRole[]>(`${environment.url_ms_security}/user-roles/user/${userId}`);
+  }
 
   private formatDateTime(dateString: string | Date): string {
     const date = new Date(dateString);

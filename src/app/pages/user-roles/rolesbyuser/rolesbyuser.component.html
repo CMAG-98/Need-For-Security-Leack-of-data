@@ -8,38 +8,38 @@
         <div
           class="card-header bg-transparent d-flex justify-content-between align-items-center"
         >
-          <h3 class="mb-0">Contraseñas del Usuario #{{ userId }}</h3>
+          <h3 class="mb-0">Roles asignados al Usuario #{{ userId }}</h3>
           <button class="btn btn-success btn-sm" (click)="back()">
             Regresar
           </button>
         </div>
         <div class="card-body">
           <div
-            *ngIf="passwords.length > 0; else sinDatos"
+            *ngIf="!loading && userRoles.length > 0; else sinDatos"
             class="table-responsive"
           >
             <table class="table table-hover table-bordered">
               <thead class="thead-light">
                 <tr>
-                  <th>ID</th>
-                  <th>Valor</th>
-                  <th>Inicio</th>
-                  <th>Fin</th>
+                  <th>ID Relación</th>
+                  <th>ID Rol</th>
+                  <th>Fecha Inicio</th>
+                  <th>Fecha Fin</th>
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let p of passwords">
-                  <td>{{ p.id }}</td>
-                  <td>{{ p.content }}</td>
-                  <td>{{ p.startAt }}</td>
-                  <td>{{ p.endAt || "—" }}</td>
+                <tr *ngFor="let ur of userRoles">
+                  <td>{{ ur.id }}</td>
+                  <td>{{ ur.role_id }}</td>
+                  <td>{{ ur.startAt | date : "medium" }}</td>
+                  <td>{{ ur.endAt ? (ur.endAt | date : "medium") : "N/A" }}</td>
                 </tr>
               </tbody>
             </table>
           </div>
           <ng-template #sinDatos>
             <div class="alert alert-info mb-0" role="alert">
-              No hay contraseñas asignadas a este usuario.
+              No hay roles asignados a este usuario.
             </div>
           </ng-template>
         </div>

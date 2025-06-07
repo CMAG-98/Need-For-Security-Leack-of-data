@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PasswordService } from 'src/app/services/password.service';
 import { Password } from 'src/app/models/password.mode';
 
@@ -14,7 +14,8 @@ export class PasswordListByUserComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private passwordService: PasswordService
+    private passwordService: PasswordService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -23,5 +24,9 @@ export class PasswordListByUserComponent implements OnInit {
       next: (data) => this.passwords = data,
       error: (err) => console.error('Error al obtener passwords', err)
     });
+  }
+  
+  back() {
+    this.router.navigate(['/users/list']);
   }
 }

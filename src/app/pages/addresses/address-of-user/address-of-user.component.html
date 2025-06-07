@@ -1,0 +1,100 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8"></div>
+
+<!-- Solo se muestra si el formulario ya está listo -->
+<div class="container-fluid mt--7" *ngIf="theFormGroup">
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0">Detalle de Dirección</h3>
+        </div>
+
+        <div class="card-body">
+          <form [formGroup]="theFormGroup">
+            <div class="container">
+              <!-- Mapa -->
+              <div class="row mb-3" *ngIf="options && layers">
+                <label class="col-3 col-form-label">Ubicación en el Mapa</label>
+                <div class="col-9">
+                  <div
+                    id="map"
+                    leaflet
+                    [leafletOptions]="options"
+                    [leafletLayers]="layers"
+                    style="height: 300px"
+                  ></div>
+                </div>
+              </div>
+
+              <!-- Latitud -->
+              <div class="row mb-3">
+                <label class="col-3 col-form-label">Latitud</label>
+                <div class="col-9">
+                  <input
+                    type="number"
+                    class="form-control"
+                    formControlName="latitude"
+                    readonly
+                  />
+                </div>
+              </div>
+
+              <!-- Longitud -->
+              <div class="row mb-3">
+                <label class="col-3 col-form-label">Longitud</label>
+                <div class="col-9">
+                  <input
+                    type="number"
+                    class="form-control"
+                    formControlName="longitude"
+                    readonly
+                  />
+                </div>
+              </div>
+
+              <!-- Calle -->
+              <div class="row mb-3">
+                <label class="col-3 col-form-label">Calle</label>
+                <div class="col-9">
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="street"
+                    readonly
+                  />
+                </div>
+              </div>
+
+              <!-- Número -->
+              <div class="row mb-3">
+                <label class="col-3 col-form-label">Número</label>
+                <div class="col-9">
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="number"
+                    readonly
+                  />
+                </div>
+              </div>
+
+              <!-- Botón volver -->
+              <div class="row">
+                <div class="col-3"></div>
+                <div class="col-9">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    (click)="back()"
+                  >
+                    Regresar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

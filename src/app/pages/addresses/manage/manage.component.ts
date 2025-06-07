@@ -173,13 +173,29 @@ export class AddressManageComponent implements OnInit {
     }
 
     const formValue = this.theFormGroup.value;
+    const userId = formValue.user_id;
 
-    this.addressService.create(formValue, formValue.user_id).subscribe({
-      next: () => {
-        Swal.fire('Creado', 'Dirección creada correctamente.', 'success');
-        this.router.navigate(['/address/list']);
+    this.addressService.list().subscribe({
+      next: (addresses: Address[]) => {
+        const userAlreadyHasAddress = addresses.some(addr => addr.user_id === userId);
+
+        if (userAlreadyHasAddress) {
+          Swal.fire('Error', 'Este usuario ya tiene una dirección registrada.', 'error');
+          return;
+        }
+
+        this.addressService.create(formValue, userId).subscribe({
+          next: () => {
+            Swal.fire('Creado', 'Dirección creada correctamente.', 'success');
+            this.router.navigate(['/address/list']);
+          },
+          error: (err) => console.error(err)
+        });
       },
-      error: (err) => console.error(err)
+      error: (err) => {
+        console.error('Error al verificar direcciones:', err);
+        Swal.fire('Error', 'No se pudo verificar las direcciones existentes.', 'error');
+      }
     });
   }
 
