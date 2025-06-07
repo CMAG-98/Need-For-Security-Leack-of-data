@@ -7,10 +7,11 @@ import { UserRoleListComponent } from './list/list.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
+
 @NgModule({
   declarations: [
     UserRoleManageComponent,
-    UserRoleListComponent
+    UserRoleListComponent,
   ],
   imports: [
     CommonModule,
