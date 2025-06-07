@@ -13,20 +13,38 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'icons', component: IconsComponent },
     { path: 'maps', component: MapsComponent },
     {
-        path: 'theaters',
-        children: [
-            {
-                path: '',
-                loadChildren: () => import('src/app/pages/theaters/theaters.module').then(m => m.TheatersModule)
-            }
-        ]
-    },
-    {
         path: 'users',
         children: [
             {
                 path: '',
                 loadChildren: () => import('src/app/pages/users/users.module').then(m => m.UsersModule)
+            }
+        ]
+    },
+    {
+        path: 'devices',
+        children: [
+            {
+                path: '',
+                loadChildren: () => import('src/app/pages/devices/devices.module').then(m => m.DevicesModule)
+            }
+        ]
+    },
+    {
+        path: 'signatures',
+        children: [
+            {
+                path: '',
+                loadChildren: () => import('src/app/pages/signatures/signatures.module').then(m => m.SignaturesModule)
+            }
+        ]
+    },
+    {
+        path: 'questions',
+        children: [
+            {
+                path: '',
+                loadChildren: () => import('src/app/pages/questions/questions.module').then(m => m.QuestionsModule)
             }
         ]
     },
