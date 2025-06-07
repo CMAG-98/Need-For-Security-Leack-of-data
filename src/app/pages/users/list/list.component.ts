@@ -51,6 +51,9 @@ export class UserListComponent implements OnInit {
   viewAddress(userId: number): void {
     this.router.navigate(['/address/user', userId]);
   }
+  viewRoles(userId: number): void {
+    this.router.navigate(['/users/user-roles/user', userId]);
+  }
 
   delete(id: number): void {
     Swal.fire({

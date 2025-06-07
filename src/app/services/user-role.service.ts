@@ -34,8 +34,8 @@ export class UserRoleService {
     return this.http.get<UserRole[]>(`${environment.url_ms_security}/user-roles/role/${roleId}`);
   }
 
-  getRoleByUser(userId: number): Observable<UserRole> {
-    return this.http.get<UserRole>(`${environment.url_ms_security}/user-roles/user/${userId}`);
+  getRoleByUser(userId: number): Observable<UserRole[]> {
+    return this.http.get<UserRole[]>(`${environment.url_ms_security}/user-roles/user/${userId}`);
   }
 
   private formatDateTime(dateString: string | Date): string {

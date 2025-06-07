@@ -1,0 +1,49 @@
+<div class="header bg-gradient-info pb-8 pt-5 pt-md-8"></div>
+
+<!-- Page content -->
+<div class="container-fluid mt--7">
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div
+          class="card-header bg-transparent d-flex justify-content-between align-items-center"
+        >
+          <h3 class="mb-0">Roles asignados al Usuario #{{ userId }}</h3>
+          <button class="btn btn-success btn-sm" (click)="back()">
+            Regresar
+          </button>
+        </div>
+        <div class="card-body">
+          <div
+            *ngIf="!loading && userRoles.length > 0; else sinDatos"
+            class="table-responsive"
+          >
+            <table class="table table-hover table-bordered">
+              <thead class="thead-light">
+                <tr>
+                  <th>ID Relación</th>
+                  <th>ID Rol</th>
+                  <th>Fecha Inicio</th>
+                  <th>Fecha Fin</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let ur of userRoles">
+                  <td>{{ ur.id }}</td>
+                  <td>{{ ur.role_id }}</td>
+                  <td>{{ ur.startAt | date : "medium" }}</td>
+                  <td>{{ ur.endAt ? (ur.endAt | date : "medium") : "N/A" }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <ng-template #sinDatos>
+            <div class="alert alert-info mb-0" role="alert">
+              No hay roles asignados a este usuario.
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -5,12 +5,14 @@ import { UsersRoutingModule } from './users-routing.module';
 import { UserListComponent } from './list/list.component';
 import { UserManageComponent } from './manage/manage.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RolesByUserComponent } from '../user-roles/rolesbyuser/rolesbyuser.component';
 
 
 @NgModule({
   declarations: [
     UserListComponent,
-    UserManageComponent
+    UserManageComponent,
+    RolesByUserComponent
   ],
   imports: [
     CommonModule,
