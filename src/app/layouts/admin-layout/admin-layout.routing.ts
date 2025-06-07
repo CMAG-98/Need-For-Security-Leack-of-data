@@ -66,4 +66,40 @@ export const AdminLayoutRoutes: Routes = [
             }
         ]
     },
+        {
+        path: 'profile',
+        children: [
+            {
+                path: '',
+                loadChildren: () => import('src/app/pages/profile/profile.module').then(m => m.ProfileModule)
+            }
+        ]
+    },
+            {
+        path: 'session',
+        children: [
+            {
+                path: '',
+                loadChildren: () => import('src/app/pages/sessions/sessions.module').then(m => m.SessionsModule)
+            }
+        ]
+    },
+            {
+        path: 'permissions',
+        children: [
+            {
+                path: '',
+                loadChildren: () => import('src/app/pages/permissions/permissions.module').then(m => m.PermissionsModule)
+            }
+        ]
+    },
+            {
+        path: 'role-permissions',
+        children: [
+            {
+                path: '',
+                loadChildren: () => import('src/app/pages/role-permissions/role-permissions.module').then(m => m.RolePermissionsModule)
+            }
+        ]
+    },
 ];
