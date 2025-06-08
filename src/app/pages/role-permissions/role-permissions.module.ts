@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ManageComponent } from './manage/manage.component';
 import { ListComponent } from './list/list.component';
+import { ManageComponent } from './manage/manage.component';
 
 
 
 @NgModule({
   declarations: [
-    ManageComponent,
-    ListComponent
+    ListComponent,
+    ManageComponent
   ],
   imports: [
     CommonModule
