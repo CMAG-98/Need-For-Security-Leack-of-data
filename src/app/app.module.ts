@@ -37,9 +37,7 @@ import { ManageComponent } from './pages/role-permissions/manage/manage.componen
     AppComponent,
     AdminLayoutComponent,
     AuthLayoutComponent,
-    PasswordListByUserComponent,
-    ListComponent,
-    ManageComponent,
+    PasswordListByUserComponent
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

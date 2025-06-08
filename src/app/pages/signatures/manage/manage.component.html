@@ -1,0 +1,37 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8"></div>
+<!-- Page content -->
+<div class="container-fluid mt--7">
+  <!-- Table -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0">Firma digital - {{user.name}}</h3>
+        </div>
+        <div class="card-body">
+          <form class="form">
+            <div class="card-body container">
+              <img class="signature-image" *ngIf="mode == 3" [src]="signature.photo" />
+              <p *ngIf="mode == 2"> Aun no existe una firma digital para este usuario </p>
+              <div class="row">
+                <input type="file" #fileInput hidden (change)="submit($event)" />
+                <button type="button" class="btn btn-primary btn-block" (click)="back()">
+                  Regresar
+                </button>
+                <button type="button" class="btn btn-danger btn-block" (click)="delete()" *ngIf="mode == 3">
+                  Eliminar firma digital
+                </button>
+                <button type="button" class="btn btn-success btn-block" (click)="fileInput.click()" *ngIf="mode == 2">
+                  Crear
+                </button>
+                <button type="button" class="btn btn-warning btn-block" (click)="fileInput.click()" *ngIf="mode == 3">
+                  Actualizar
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

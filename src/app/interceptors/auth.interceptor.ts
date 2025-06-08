@@ -6,7 +6,7 @@ import {
   HttpInterceptor,
   HttpErrorResponse
 } from '@angular/common/http';
-import { catchError, Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { SecurityService } from '../services/security.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
@@ -57,7 +57,7 @@ export class AuthInterceptor implements HttpInterceptor {
             });
           }
 
-          return new Observable<never>();
+          return throwError(() => err);
         })
       );
     }

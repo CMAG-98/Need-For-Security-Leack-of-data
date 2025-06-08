@@ -14,17 +14,19 @@ declare interface RouteInfo {
 export const ROUTES: RouteInfo[] = [
   { path: '/dashboard', title: 'Dashboard', icon: 'ni-tv-2 text-primary', class: '', type: 2 },
   { path: '/icons', title: 'Icons', icon: 'ni-planet text-blue', class: '', type: 1 },
-  { path: '/maps', title: 'Maps', icon: 'ni-pin-3 text-orange', class: '', type: 1 },
+  // { path: '/maps', title: 'Maps', icon: 'ni-pin-3 text-orange', class: '', type: 1 },
   { path: '/user-profile', title: 'User profile', icon: 'ni-single-02 text-yellow', class: '', type: 1 },
-  { path: '/tables', title: 'Tables', icon: 'ni-bullet-list-67 text-red', class: '', type: 1 },
+  // { path: '/tables', title: 'Tables', icon: 'ni-bullet-list-67 text-red', class: '', type: 1 },
   { path: '/login', title: 'Login', icon: 'ni-key-25 text-info', class: '', type: 0 },
   { path: '/register', title: 'Register', icon: 'ni-circle-08 text-pink', class: '', type: 0 },
   { path: '/users/list', title: 'Usuarios', icon: 'ni-user-run text-primary', class: '', type: 1 },
+  // { path: '/devices/list', title: 'Dispositivos', icon: 'ni-camera-compact text-primary', class: '', type: 1 },
+  { path: '/questions/list', title: 'Preguntas', icon: 'ni-send text-primary', class: '', type: 1 },
+  // { path: '/signatures/list', title: 'Firmas', icon: 'ni-badge text-primary', class: '', type: 1 },
   { path: '/roles/list', title: 'Roles', icon: 'ni-controller text-red', class: '', type: 1 },
   { path: '/user-roles/list', title: 'Roles de usuarios', icon: 'ni-settings text-purple', class: '', type: 1 },
   { path: '/passwords/list', title: 'Contraseñas', icon: 'ni-key-25 text-green', class: '', type: 1 },
-  { path: '/address/list', title: 'Direcciones', icon: 'ni-square-pin text-orange', class: '', type: 1 },
-  // { path: '/theaters/list', title: 'Teatros', icon: 'ni-circle-08 text-pink', class: '', type: 1 }
+  { path: '/address/list', title: 'Direcciones', icon: 'ni-square-pin text-orange', class: '', type: 1 }
 ];
 
 @Component({

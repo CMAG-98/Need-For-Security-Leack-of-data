@@ -9,7 +9,7 @@ import Swal from 'sweetalert2';
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss']
 })
-export class UserListComponent implements OnInit {
+export class ListComponent implements OnInit {
   users: User[] = [];
 
   constructor(
@@ -53,14 +53,6 @@ export class UserListComponent implements OnInit {
   }
   viewRoles(userId: number): void {
     this.router.navigate(['/users/user-roles/user', userId]);
-  }
-
-  viewDigitalSignature(userId: number): void {
-    this.router.navigate(['/signatures/view', userId]);
-  }
-
-  viewDevices(userId: number): void {
-    this.router.navigate([`/devices/${userId}/list`]);
   }
 
   delete(id: number): void {
