@@ -6,35 +6,36 @@
     <div class="col">
       <div class="card shadow">
         <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
-          <h3 class="mb-0">Usuarios</h3>
-          <button class="btn btn-success btn-sm" (click)="create()">Crear</button>
+          <h3 class="mb-0 mr-3 text-nowrap">Preguntas de seguridad</h3>
+          <input
+                    #qInput
+                    type="text"
+                    class="form-control mr-1"
+                    placeholder="Pregunta algo..."
+                    (input)="changeName($event)"
+                  />
+          <input
+                    #qInput2
+                    type="text"
+                    class="form-control mr-1"
+                    placeholder="Descripción"
+                    (input)="changeDescription($event)"
+                  />
+          <button [ngClass]="canCreate ? 'btn btn-success btn-md' : 'btn btn-disabled btn-md'" [disabled]="!canCreate" (click)="create()">Crear</button>
         </div>
         <div class="card-body">
           <div class="table-responsive">
             <table class="table table-hover table-bordered">
-              <thead class="thead-light">
-                <tr>
-                  <th>Id</th>
-                  <th>Nombre</th>
-                  <th>Correo</th>
-                  <th>Opciones</th>
-                </tr>
-              </thead>
               <tbody>
-                <tr *ngFor="let user of users">
-                  <td>{{ user.id }}</td>
-                  <td>{{ user.name }}</td>
-                  <td>{{ user.email }}</td>
+                <tr *ngFor="let question of questions">
+                  <td (click)="view(question.id)" ><strong>{{ question.name }}</strong></td>
+                  <td (click)="view(question.id)">{{ question.description }}</td>
+                  <td (click)="view(question.id)" class="text-blue-400" >Responder</td>
+
                   <td>
-                    <div class="btn-group" role="group" aria-label="Opciones">
-                      <button class="btn btn-warning btn-sm" (click)="view(user.id)">Ver</button>
-                      <button class="btn btn-primary btn-sm" (click)="edit(user.id)">Editar</button>
-                      <button class="btn btn-danger btn-sm" (click)="delete(user.id)">Eliminar</button>
-                      <button class="btn btn-info btn-sm" (click)="viewPasswords(user.id)">Contraseñas</button>
-                      <button class="btn btn-secondary btn-sm" (click)="viewAddress(user.id)">Dirección</button>
-                      <button class="btn btn-warning btn-sm" (click)="viewRoles(user.id)">Roles</button>
-                    </div>
+                      <button class="btn btn-danger btn-sm" (click)="delete(question.id)">Eliminar</button>
                   </td>
+
                 </tr>
               </tbody>
             </table>

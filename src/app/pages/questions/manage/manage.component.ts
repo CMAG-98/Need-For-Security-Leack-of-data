@@ -1,7 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Answer } from 'src/app/models/answer.model';
+import { SecurityQuestion } from 'src/app/models/securityQuestion.model';
 import { User } from 'src/app/models/user.model';
+import { AnswerService } from 'src/app/services/answer.service';
+import { SecurityQuestionService } from 'src/app/services/security-question.service';
 import { UserService } from 'src/app/services/user.service';
 import Swal from 'sweetalert2';
 
@@ -11,71 +15,41 @@ import Swal from 'sweetalert2';
   styleUrls: ['./manage.component.scss']
 })
 export class ManageComponent implements OnInit {
-  mode: number; // 1: view, 2: create, 3: update
-  user: User;
-  theFormGroup: FormGroup;
-  trySend: boolean;
-  showPassword: boolean = false;
+  @ViewChild('qInput') qInput!: ElementRef;
+  canCreate: boolean = false;
+
+  question: SecurityQuestion = new SecurityQuestion();
+  answers: Answer[] = []
+  answer: Answer = new Answer();
+
+  userId: number = 0;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private userService: UserService,
     private router: Router,
-    private formBuilder: FormBuilder
+    private questionService: SecurityQuestionService,
+    private answerService: AnswerService
   ) {
-    this.trySend = false;
-    this.user = { email: '', password: '' };
-    this.configFormGroup();
+    this.userId = 1;
   }
 
   ngOnInit(): void {
     const currentUrl = this.activatedRoute.snapshot.url.join('/');
-    if (currentUrl.includes('view')) {
-      this.mode = 1;
-    } else if (currentUrl.includes('create')) {
-      this.mode = 2;
-    } else if (currentUrl.includes('update')) {
-      this.mode = 3;
-    }
-
-    this.updateFormState();
 
     if (this.activatedRoute.snapshot.params.id) {
-      const userId = +this.activatedRoute.snapshot.params.id;
-      this.user.id = userId;
-      this.getUser(userId);
+      const questionId = +this.activatedRoute.snapshot.params.id;
+      this.question.id = questionId;
+      this.getQuestion(questionId);
+      this.getAnswers(questionId);
     }
   }
 
-  configFormGroup() {
-    this.theFormGroup = this.formBuilder.group({
-      id: [''],
-      name: ['', [Validators.required, Validators.minLength(2)]],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-    });
-  }
-
-  get getTheFormGroup() {
-    return this.theFormGroup.controls;
-  }
-
-  togglePasswordVisibility() {
-    this.showPassword = !this.showPassword;
-  }
-
-  getUser(id: number) {
-    this.userService.view(id).subscribe({
+  getQuestion(id: number) {
+    this.questionService.getById(id).subscribe({
       next: (response) => {
-        this.user = response;
-        this.theFormGroup.patchValue({
-          id: this.user.id,
-          name: this.user.name,
-          email: this.user.email,
-          password: this.user.password
-        });
-        this.updateFormState();
-        console.log('User fetched successfully:', this.user);
+        this.question = response;
+        console.log('question fetched successfully:', this.question);
       },
       error: (error) => {
         console.error('Error fetching user:', error);
@@ -83,12 +57,49 @@ export class ManageComponent implements OnInit {
     });
   }
 
-  updateFormState() {
-    if (this.mode === 1) {
-      this.theFormGroup.disable();
-    } else {
-      this.theFormGroup.enable();
+  changeContent(event: any): void {
+    this.answer.content = event.target.value ?? "";
+    this.updateDisabled()
+  }
+
+  updateDisabled() {
+    this.canCreate = (this.answer.content ?? "").length > 0
+  }
+
+  clear(): void {
+    this.answer = new Answer();
+    this.qInput.nativeElement.value = ""
+    this.updateDisabled()
+  }
+
+  getAnswers(id: number) {
+    /**
+    {
+        "content": "Fluffy",
+        "created_at": "Sun, 08 Jun 2025 15:03:37 GMT",
+        "id": 1,
+        "security_question_id": 1,
+        "updated_at": "Sun, 08 Jun 2025 15:03:37 GMT",
+        "user_id": 1
     }
+     */
+    this.answerService.list().subscribe({
+      next: (response) => {
+        this.answers = response.filter(answer => answer.security_question_id == id);
+
+        this.answers.forEach(answer => {
+          if (answer.user_id == this.userId) {
+            this.answer = window.structuredClone(answer);
+            this.qInput.nativeElement.value = answer.content + "";
+            this.updateDisabled()
+          }
+        })
+        console.log('question fetched successfully:', this.answers);
+      },
+      error: (error) => {
+        console.error('Error fetching user:', error);
+      }
+    });
   }
 
   back() {
@@ -96,39 +107,54 @@ export class ManageComponent implements OnInit {
   }
 
   create() {
-    this.trySend = true;
-    if (this.theFormGroup.invalid) {
+    if (!this.canCreate) {
       Swal.fire('Error!', 'Por favor, complete todos los campos requeridos.', 'error');
       return;
     }
 
-    this.userService.create(this.theFormGroup.value).subscribe({
+    this.answerService.create({ content: this.answer.content }, this.userId.toString(), this.question.id.toString()).subscribe({
       next: (user) => {
-        console.log('User created successfully:', user);
-        Swal.fire('Creado!', 'Usuario creado correctamente.', 'success');
-        this.router.navigate(['/users/list']);
+        console.log('answer created successfully:', user);
+        this.getAnswers(this.question.id)
       },
       error: (error) => {
-        console.error('Error creating user:', error);
+        console.error('Error creating answer:', error);
       }
     });
   }
 
   update() {
-    this.trySend = true;
-    if (this.theFormGroup.invalid) {
+    if (!this.canCreate) {
       Swal.fire('Error!', 'Por favor, complete todos los campos requeridos.', 'error');
       return;
     }
 
-    this.userService.update(this.theFormGroup.value).subscribe({
+    this.answerService.update({ content: this.answer.content, id: this.answer.id }).subscribe({
       next: (user) => {
-        console.log('User updated successfully:', user);
-        Swal.fire('Actualizado!', 'Usuario actualizado correctamente.', 'success');
-        this.router.navigate(['/users/list']);
+        console.log('answer created successfully:', user);
+        this.getAnswers(this.question.id)
       },
       error: (error) => {
-        console.error('Error updating user:', error);
+        console.error('Error creating answer:', error);
+      }
+    });
+  }
+
+  
+  delete() {
+    if (!this.answer.id) {
+      Swal.fire('Error!', 'No hay respuesta que eliminar.', 'error');
+      return;
+    }
+
+    this.answerService.delete(this.answer.id).subscribe({
+      next: (user) => {
+        console.log('answer created successfully:', user);
+        this.getAnswers(this.question.id)
+        this.clear()
+      },
+      error: (error) => {
+        console.error('Error creating answer:', error);
       }
     });
   }

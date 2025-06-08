@@ -1,5 +1,5 @@
 export class SecurityQuestion {
-    id:number;
+    id?:number;
     name:string;
     description:string;
 }

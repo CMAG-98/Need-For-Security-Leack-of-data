@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { SecurityQuestion } from 'src/app/models/securityQuestion.model';
 import { User } from 'src/app/models/user.model';
+import { SecurityQuestionService } from 'src/app/services/security-question.service';
 import { UserService } from 'src/app/services/user.service';
 import Swal from 'sweetalert2';
 
@@ -10,21 +12,29 @@ import Swal from 'sweetalert2';
   styleUrls: ['./list.component.scss']
 })
 export class ListComponent implements OnInit {
-  users: User[] = [];
+  questions: SecurityQuestion[] = [];
+  canCreate: boolean = false;
+
+  question: SecurityQuestion = new SecurityQuestion();
+
+  @ViewChild('qInput') qInput!: ElementRef;
+  @ViewChild('qInput2') qInput2!: ElementRef;
 
   constructor(
     private userService: UserService,
+    private questionService: SecurityQuestionService,
     private router: Router
   ) { }
 
   ngOnInit(): void {
+    
     this.list();
   }
 
   list(): void {
-    this.userService.list().subscribe({
-      next: (users) => {
-        this.users = users;
+    this.questionService.list().subscribe({
+      next: (data) => {
+        this.questions = data;
       },
       error: (err) => {
         console.error('Error al cargar usuarios', err);
@@ -32,33 +42,60 @@ export class ListComponent implements OnInit {
     });
   }
 
+  changeName(event: any): void {
+    this.question.name = event.target.value ?? "";
+    this.updateDisabled()
+  }
+
+  changeDescription(event: any): void {
+    this.question.description = event.target.value ?? "";
+    this.updateDisabled()
+  }
+
+  updateDisabled()
+  {
+    this.canCreate = (this.question.name ?? "").length > 0 && (this.question.description ?? "").length > 0
+  }
+
+  clear(): void {
+    this.question = new SecurityQuestion();
+    this.qInput.nativeElement.value = ""
+    this.qInput2.nativeElement.value = ""
+    this.updateDisabled()
+  }
+
   create(): void {
-    this.router.navigate(['/users/create']);
+    if (!this.canCreate) {
+      Swal.fire('Error!', 'Por favor, complete todos los campos requeridos.', 'error');
+      return;
+    }
+
+    this.questionService.create({ name: this.qInput.nativeElement.value, description: this.qInput2.nativeElement.value }).subscribe({
+      next: (user) => {
+        console.log('User created successfully:', user);
+        Swal.fire('Creado!', 'Pregunta creada correctamente.', 'success');
+        this.list()
+      },
+      error: (error) => {
+        console.error('Error creating user:', error);
+      }
+    });
+
+    this.clear()
   }
 
   view(id: number): void {
-    this.router.navigate(['/users/view/' + id]);
+    this.router.navigate(['/questions/view/' + id]);
   }
 
   edit(id: number): void {
-    this.router.navigate(['/users/update/' + id]);
-  }
-
-  viewPasswords(id: number): void {
-    this.router.navigate(['/passwords/user', id]);
-  }
-
-  viewAddress(userId: number): void {
-    this.router.navigate(['/address/user', userId]);
-  }
-  viewRoles(userId: number): void {
-    this.router.navigate(['/users/user-roles/user', userId]);
+    this.router.navigate(['/questions/update/' + id]);
   }
 
   delete(id: number): void {
     Swal.fire({
-      title: 'Eliminar usuario',
-      text: '¿Está seguro de que desea eliminar este usuario?',
+      title: 'Eliminar pregunta',
+      text: '¿Está seguro de que desea eliminar esta pregunta?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -67,14 +104,14 @@ export class ListComponent implements OnInit {
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.userService.delete(id).subscribe({
+        this.questionService.delete(id).subscribe({
           next: () => {
-            Swal.fire('Eliminado', 'El usuario ha sido eliminado.', 'success');
+            Swal.fire('Eliminado', 'El registro ha sido eliminado.', 'success');
             this.list();
           },
           error: (err) => {
-            console.error('Error al eliminar usuario', err);
-            Swal.fire('Error', 'No se pudo eliminar el usuario.', 'error');
+            console.error('Error al eliminar registro', err);
+            Swal.fire('Error', 'No se pudo eliminar el registro.', 'error');
           }
         });
       }
