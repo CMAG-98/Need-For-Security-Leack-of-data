@@ -19,8 +19,8 @@ export class DeviceService {
     return this.http.get<Device>(`${environment.url_ms_security}/devices/${id}`);
   }
 
-  getByUserId(userId: number): Observable<Device> {
-    return this.http.get<Device>(`${environment.url_ms_security}/devices/user/${userId}`);
+  getByUserId(userId: number): Observable<Device[]> {
+    return this.http.get<Device[]>(`${environment.url_ms_security}/devices/user/${userId}`);
   }
 
   create(data: Device, userId: string): Observable<Device> {

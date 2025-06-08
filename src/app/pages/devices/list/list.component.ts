@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Device } from 'src/app/models/device.model';
 import { User } from 'src/app/models/user.model';
+import { DeviceService } from 'src/app/services/device.service';
 import { UserService } from 'src/app/services/user.service';
 import Swal from 'sweetalert2';
 
@@ -10,55 +12,64 @@ import Swal from 'sweetalert2';
   styleUrls: ['./list.component.scss']
 })
 export class ListComponent implements OnInit {
-  users: User[] = [];
+  user: User = {
+    id: 0
+  };
+  devices: Device[] = [];
 
   constructor(
+    private activatedRoute: ActivatedRoute,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private deviceService: DeviceService
   ) { }
 
   ngOnInit(): void {
-    this.list();
+    const userId = +this.activatedRoute.snapshot.params.user;
+    this.user.id = userId;
+    this.list(userId);
+    this.getUser(userId);
   }
 
-  list(): void {
-    this.userService.list().subscribe({
-      next: (users) => {
-        this.users = users;
+  getUser(id: number) {
+    this.userService.view(id).subscribe({
+      next: (response) => {
+        this.user = response;
+        console.log('User fetched successfully:', this.user);
+      },
+      error: (error) => {
+        console.error('Error fetching user:', error);
+      }
+    });
+  }
+
+  list(id: number): void {
+    this.deviceService.getByUserId(id).subscribe({
+      next: (devices) => {
+        this.devices = devices;
       },
       error: (err) => {
-        console.error('Error al cargar usuarios', err);
+        console.error('Error al cargar dispositivos', err);
       }
     });
   }
 
   create(): void {
-    this.router.navigate(['/users/create']);
+    this.router.navigate([`/devices/${this.user.id}/create`]);
   }
 
   view(id: number): void {
-    this.router.navigate(['/users/view/' + id]);
+    this.router.navigate([`/devices/${this.user.id}/view/` + id]);
   }
 
   edit(id: number): void {
-    this.router.navigate(['/users/update/' + id]);
-  }
-
-  viewPasswords(id: number): void {
-    this.router.navigate(['/passwords/user', id]);
-  }
-
-  viewAddress(userId: number): void {
-    this.router.navigate(['/address/user', userId]);
-  }
-  viewRoles(userId: number): void {
-    this.router.navigate(['/users/user-roles/user', userId]);
+    this.router.navigate([`/devices/${this.user.id}/update/` + id]);
   }
 
   delete(id: number): void {
     Swal.fire({
-      title: 'Eliminar usuario',
-      text: '¿Está seguro de que desea eliminar este usuario?',
+      title: 'Eliminar dispositivo',
+      text: '¿Está seguro de que desea eliminar este dispositivo?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -67,14 +78,14 @@ export class ListComponent implements OnInit {
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.userService.delete(id).subscribe({
+        this.deviceService.delete(id).subscribe({
           next: () => {
-            Swal.fire('Eliminado', 'El usuario ha sido eliminado.', 'success');
-            this.list();
+            Swal.fire('Eliminado', 'El dispositivo ha sido eliminado.', 'success');
+            this.list(this.user.id);
           },
           error: (err) => {
-            console.error('Error al eliminar usuario', err);
-            Swal.fire('Error', 'No se pudo eliminar el usuario.', 'error');
+            console.error('Error al eliminar dispositivo', err);
+            Swal.fire('Error', 'No se pudo eliminar el dispositivo.', 'error');
           }
         });
       }

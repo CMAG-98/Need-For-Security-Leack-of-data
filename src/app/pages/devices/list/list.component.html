@@ -6,7 +6,7 @@
     <div class="col">
       <div class="card shadow">
         <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
-          <h3 class="mb-0">Usuarios</h3>
+          <h3 class="mb-0">Dispositivos - {{user.name}}</h3>
           <button class="btn btn-success btn-sm" (click)="create()">Crear</button>
         </div>
         <div class="card-body">
@@ -16,23 +16,22 @@
                 <tr>
                   <th>Id</th>
                   <th>Nombre</th>
-                  <th>Correo</th>
-                  <th>Opciones</th>
+                  <th>IP</th>
+                  <th>Sistema operativo</th>
+                  <th>Sistema operativo</th>
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let user of users">
-                  <td>{{ user.id }}</td>
-                  <td>{{ user.name }}</td>
-                  <td>{{ user.email }}</td>
+                <tr *ngFor="let device of devices">
+                  <td>{{ device.id }}</td>
+                  <td>{{ device.name }}</td>
+                  <td>{{ device.ip }}</td>
+                  <td>{{ device.operating_system }}</td>
                   <td>
                     <div class="btn-group" role="group" aria-label="Opciones">
-                      <button class="btn btn-warning btn-sm" (click)="view(user.id)">Ver</button>
-                      <button class="btn btn-primary btn-sm" (click)="edit(user.id)">Editar</button>
-                      <button class="btn btn-danger btn-sm" (click)="delete(user.id)">Eliminar</button>
-                      <button class="btn btn-info btn-sm" (click)="viewPasswords(user.id)">Contraseñas</button>
-                      <button class="btn btn-secondary btn-sm" (click)="viewAddress(user.id)">Dirección</button>
-                      <button class="btn btn-warning btn-sm" (click)="viewRoles(user.id)">Roles</button>
+                      <button class="btn btn-warning btn-sm" (click)="view(device.id)">Ver</button>
+                      <button class="btn btn-primary btn-sm" (click)="edit(device.id)">Editar</button>
+                      <button class="btn btn-danger btn-sm" (click)="delete(device.id)">Eliminar</button>
                     </div>
                   </td>
                 </tr>

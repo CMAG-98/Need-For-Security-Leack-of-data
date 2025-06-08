@@ -44,78 +44,51 @@
               </div>
               <br />
               <div class="row">
-                <div class="col-3">Email</div>
+                <div class="col-3">IP</div>
                 <div class="col-9">
                   <input
-                    type="email"
+                    type="text"
                     class="form-control"
-                    formControlName="email"
+                    formControlName="ip"
                   />
                   <div
                     *ngIf="
-                      getTheFormGroup.email.errors &&
-                      (getTheFormGroup.email.dirty ||
-                        getTheFormGroup.email.touched ||
+                      getTheFormGroup.ip.errors &&
+                      (getTheFormGroup.ip.dirty ||
+                        getTheFormGroup.ip.touched ||
                         trySend)
                     "
                   >
                     <strong
-                      *ngIf="getTheFormGroup.email.errors.required"
+                      *ngIf="getTheFormGroup.ip.errors.required"
                       class="msnError"
                       >Requerido</strong
-                    >
-                    <strong
-                      *ngIf="getTheFormGroup.email.errors.email"
-                      class="msnError"
-                      >Email inválido</strong
                     >
                   </div>
                 </div>
               </div>
               <br />
-              <div class="row" *ngIf="mode != 1">
-                <div class="col-3">Contraseña</div>
+              <div class="row">
+                <div class="col-3">Sistema operativo</div>
                 <div class="col-9 input-group">
                   <input
-                    [type]="showPassword ? 'text' : 'password'"
+                    type="text"
                     class="form-control"
-                    formControlName="password"
+                    formControlName="operating_system"
                   />
-                  <button
-                    type="button"
-                    class="btn btn-outline-secondary"
-                    (click)="togglePasswordVisibility()"
-                    tabindex="-1"
-                    [attr.aria-label]="
-                      showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'
-                    "
-                  >
-                    <i
-                      [ngClass]="
-                        showPassword
-                          ? 'ni ni-bulb-61'
-                          : 'ni ni-bulb-61 text-muted'
-                      "
-                    ></i>
-                  </button>
                 </div>
                 <div
                   *ngIf="
-                    getTheFormGroup.password.errors &&
-                    (getTheFormGroup.password.dirty ||
-                      getTheFormGroup.password.touched ||
+                    getTheFormGroup.operating_system.errors &&
+                    (getTheFormGroup.operating_system.dirty ||
+                      getTheFormGroup.operating_system.touched ||
                       trySend)
                   "
                 >
                   <strong
-                    *ngIf="getTheFormGroup.password.errors.required"
+                    *ngIf="getTheFormGroup.operating_system.errors.required"
                     class="msnError"
                     >Requerido</strong
-                  >
-                  <strong
-                    *ngIf="getTheFormGroup.password.errors.minlength"
-                    class="msnError"
-                    >Mínimo 6 caracteres</strong
                   >
                 </div>
               </div>

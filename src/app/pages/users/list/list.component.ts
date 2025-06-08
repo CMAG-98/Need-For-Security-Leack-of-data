@@ -59,6 +59,10 @@ export class UserListComponent implements OnInit {
     this.router.navigate(['/signatures/view', userId]);
   }
 
+  viewDevices(userId: number): void {
+    this.router.navigate([`/devices/${userId}/list`]);
+  }
+
   delete(id: number): void {
     Swal.fire({
       title: 'Eliminar usuario',
