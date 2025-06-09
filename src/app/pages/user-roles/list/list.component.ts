@@ -74,10 +74,6 @@ export class UserRoleListComponent implements OnInit {
     this.router.navigate(['/user-roles/view/' + id]);
   }
 
-  edit(id: string): void {
-    this.router.navigate(['/user-roles/update/' + id]);
-  }
-
   delete(id: string): void {
     Swal.fire({
       title: 'Eliminar asignación',

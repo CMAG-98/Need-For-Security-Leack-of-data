@@ -95,8 +95,8 @@ export class UserRoleManageComponent implements OnInit {
   }
 
   updateSelectedUserAndRoleNames() {
-    const userId = this.theFormGroup.get('id_user')?.value;
-    const roleId = this.theFormGroup.get('id_role')?.value;
+    const userId = this.theFormGroup.get('user_id')?.value;
+    const roleId = this.theFormGroup.get('role_id')?.value;
 
     const user = this.users.find(u => u.id === userId);
     const role = this.roles.find(r => r.id === roleId);
