@@ -1,0 +1,60 @@
+<div class="container mt-4">
+  <h2>Mi Perfil</h2>
+
+  <!-- Mostrar loading mientras se cargan los datos -->
+  <div *ngIf="!profile" class="text-center">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p>Cargando perfil...</p>
+  </div>
+
+  <!-- Contenido solo cuando profile está cargado -->
+  <div *ngIf="profile">
+    <!-- Modo solo lectura -->
+    <div *ngIf="!editMode">
+      <div class="card p-3">
+        <div class="text-center">
+          <img [src]="profile.photo" alt="Foto de perfil" class="rounded-circle" style="width: 150px;">
+        </div>
+        <div class="mt-3">
+          <p><strong>Teléfono:</strong> {{ profile.phone }}</p>
+        </div>
+        <div class="text-center mt-3">
+          <button class="btn btn-primary" (click)="enableEdit()">Editar Perfil</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Formulario de edición -->
+    <form *ngIf="editMode" [formGroup]="profileForm" (ngSubmit)="saveChanges()">
+      <div class="card p-3">
+        <div class="form-group">
+          <label for="phone">Teléfono</label>
+          <input id="phone" type="text" class="form-control" formControlName="phone">
+          <div *ngIf="profileForm.get('phone')?.invalid && profileForm.get('phone')?.touched" class="text-danger">
+            Teléfono es requerido.
+          </div>
+        </div>
+
+        <div class="form-group mt-3">
+          <label for="photo">URL de la Foto</label>
+          <input id="photo" type="text" class="form-control" formControlName="photo">
+          <div class="text-center mt-3">
+            <img [src]="profileForm.get('photo')?.value" alt="Foto de perfil" class="rounded-circle" style="width: 150px;">
+          </div>
+        </div>
+
+        <div class="text-center mt-4">
+          <button type="submit" class="btn btn-success" [disabled]="profileForm.invalid">Guardar Cambios</button>
+          <button type="button" class="btn btn-secondary ms-2" (click)="cancelEdit()">Cancelar</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Mostrar error si hay problemas -->
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+</div>

@@ -85,16 +85,16 @@ export const AdminLayoutRoutes: Routes = [
         ]
     },
         {
-        path: 'profile',
+        path: 'profiles',
         children: [
             {
                 path: '',
-                loadChildren: () => import('src/app/pages/profile/profile.module').then(m => m.ProfileModule)
+                loadChildren: () => import('src/app/pages/profiles/profiles.module').then(m => m.ProfilesModule)
             }
         ]
     },
             {
-        path: 'session',
+        path: 'sessions',
         children: [
             {
                 path: '',

@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
+import { RolePermissionsRoutingModule } from './role-permissions-routing.module';
 import { ListComponent } from './list/list.component';
 import { ManageComponent } from './manage/manage.component';
-
 
 
 @NgModule({
@@ -11,7 +12,8 @@ import { ManageComponent } from './manage/manage.component';
     ManageComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    RolePermissionsRoutingModule
   ]
 })
 export class RolePermissionsModule { }

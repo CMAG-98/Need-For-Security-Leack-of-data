@@ -1,1 +1,80 @@
-<p>manage works!</p>
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8"></div>
+<!-- Page content -->
+<div class="container-fluid mt--7">
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0" *ngIf="mode === 1">Detalle</h3>
+          <h3 class="mb-0" *ngIf="mode === 2">Crear</h3>
+          <h3 class="mb-0" *ngIf="mode === 3">Actualizar</h3>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="sessionForm">
+            <div class="card-body container">
+              <!-- Campo ID: que el usuario pueda editar si es necesario -->
+              <div class="row">
+                <div class="col-3">ID</div>
+                <div class="col-9">
+                  <input type="text" class="form-control" formControlName="id" [readonly]="mode === 1">
+                </div>
+              </div>
+              <br>
+              <!-- Campo Token: siempre visible y no editable -->
+              <div class="row">
+                <div class="col-3">Token</div>
+                <div class="col-9">
+                  <input type="text" class="form-control" formControlName="token" readonly>
+                </div>
+              </div>
+              <br>
+              <!-- Campo Expiración: siempre visible y no editable -->
+              <div class="row">
+                <div class="col-3">Expiración</div>
+                <div class="col-9">
+                  <input type="text" class="form-control" formControlName="expiration" readonly>
+                </div>
+              </div>
+              <br>
+              <!-- Campo FACode -->
+              <div class="row">
+                <div class="col-3">FACode</div>
+                <div class="col-9">
+                  <input type="text" class="form-control" formControlName="FACode" [readonly]="mode === 1">
+                  <div *ngIf="formControls.FACode.errors && (formControls.FACode.dirty || formControls.FACode.touched || trySend)" class="text-danger">
+                    <strong *ngIf="formControls.FACode.errors.required">Requerido</strong>
+                  </div>
+                </div>
+              </div>
+              <br>
+              <!-- Campo Estado: select para elegir entre "activo", "suspendido" y "cerrada" -->
+              <div class="row">
+                <div class="col-3">Estado</div>
+                <div class="col-9">
+                  <select class="form-control" formControlName="state" [disabled]="mode === 1">
+                    <option value="activo">activo</option>
+                    <option value="suspendido">suspendido</option>
+                    <option value="cerrada">cerrada</option>
+                  </select>
+                  <div *ngIf="formControls.state.errors && (formControls.state.dirty || formControls.state.touched || trySend)" class="text-danger">
+                    <strong *ngIf="formControls.state.errors.required">Requerido</strong>
+                  </div>
+                </div>
+              </div>
+              <br>
+              <!-- Botones de acción -->
+              <div class="row">
+                <div class="col-3"></div>
+                <div class="col-9">
+                  <button type="button" class="btn btn-primary btn-block" (click)="back()" *ngIf="mode === 1">Regresar</button>
+                  <button type="button" class="btn btn-success btn-block" (click)="create()" *ngIf="mode === 2">Crear</button>
+                  <button type="button" class="btn btn-warning btn-block" (click)="update()" *ngIf="mode === 3">Actualizar</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
