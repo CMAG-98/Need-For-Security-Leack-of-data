@@ -1,1 +1,96 @@
-<p>manage works!</p>
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8"></div>
+<!-- Page content -->
+<div class="container-fluid mt--7">
+  <div class="row">
+    <div class="col">
+      <!-- Card -->
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0">
+            {{ mode === 2 ? 'Crear permiso' : mode === 3 ? 'Actualizar permiso' : 'Ver permiso' }}
+          </h3>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="permissionForm">
+            <div class="card-body container">
+              
+              <!-- Campo: ID (solo en modo view y update) -->
+              <div class="row" *ngIf="mode !== 2">
+                <div class="col-3">ID</div>
+                <div class="col-9">
+                  <input type="text" class="form-control" formControlName="id" readonly>
+                </div>
+              </div>
+              <br *ngIf="mode !== 2" />
+
+              <!-- Campo: Entidad -->
+              <div class="row">
+                <div class="col-3">Entidad</div>
+                <div class="col-9">
+                  <select class="form-control" formControlName="entity">
+                    <option value="">Seleccione una entidad</option>
+                    <option *ngFor="let entity of entities" [value]="entity.entity">
+                      {{ entity.label }}
+                    </option>
+                  </select>
+                  <small class="text-muted" *ngIf="mode === 3">
+                    No se puede modificar la entidad en modo edición
+                  </small>
+                </div>
+              </div>
+              <br />
+
+              <!-- Campo: URL -->
+              <div class="row">
+                <div class="col-3">URL</div>
+                <div class="col-9">
+                  <input type="text" class="form-control" formControlName="url" readonly>
+                  <small class="text-muted">
+                    {{ mode === 2 ? 'Se actualiza automáticamente según la entidad seleccionada' : 'URL del endpoint' }}
+                  </small>
+                </div>
+              </div>
+              <br />
+
+              <!-- Campo: Método -->
+              <div class="row">
+                <div class="col-3">Método HTTP</div>
+                <div class="col-9">
+                  <select class="form-control" formControlName="method">
+                    <option value="">Seleccione un método</option>
+                    <option value="GET">GET</option>
+                    <option value="POST">POST</option>
+                    <option value="PUT">PUT</option>
+                    <option value="DELETE">DELETE</option>
+                  </select>
+                  <small class="text-muted" *ngIf="mode === 3">
+                    Solo se puede modificar el método HTTP en modo edición
+                  </small>
+                </div>
+              </div>
+              <br />
+
+              <!-- Botones de acción -->
+              <div class="row">
+                <div class="col-3"></div>
+                <div class="col-9">
+                  
+                  <button type="button" class="btn btn-secondary mr-2" (click)="back()">
+                    {{ mode === 1 ? 'Regresar' : 'Cancelar' }}
+                  </button>
+                  <button type="button" class="btn btn-success" *ngIf="mode === 2" (click)="save()">
+                    Crear Permiso
+                  </button>
+                  <button type="button" class="btn btn-warning" *ngIf="mode === 3" (click)="save()">
+                    Actualizar Permiso
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!-- Fin de la Card -->
+    </div>
+  </div>
+</div>

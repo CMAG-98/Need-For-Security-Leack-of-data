@@ -38,10 +38,6 @@ export class NavbarComponent implements OnInit {
     this.listTitles = ROUTES.filter(listTitle => listTitle);
   }
 
-  goToProfile(): void {
-    this.router.navigate(['/profiles/view']);
-  }
-
   getTitle() {
     var titlee = this.location.prepareExternalUrl(this.location.path());
     if (titlee.charAt(0) === '#') {

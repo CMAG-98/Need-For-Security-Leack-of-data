@@ -1,4 +1,4 @@
-import { Permission } from './permission';
+import { Permission } from './permission.model';
 
 describe('Permission', () => {
   it('should create an instance', () => {
