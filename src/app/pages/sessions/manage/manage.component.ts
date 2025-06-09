@@ -131,7 +131,7 @@ generateExpiration(hours: number): string {
 
 back(): void {
   // Usar el userId para regresar a la lista específica del usuario
-  this.router.navigate(['/sessions/user', this.currentUser.id, 'list']);
+  this.router.navigate(['/sessions/user', this.currentUser.id+1, 'list']);
 }
 
 create(): void {
@@ -186,7 +186,7 @@ update(): void {
         icon: 'success'
       });
       // Regresar a la lista del usuario específico
-      this.router.navigate(['/sessions/user', this.currentUser.id, 'list']);
+      this.router.navigate(['/sessions/user', this.currentUser.id+1, 'list']);
     },
     error: (error) => console.error('Error actualizando la sesión:', error)
   });

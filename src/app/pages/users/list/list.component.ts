@@ -64,9 +64,15 @@ export class UserListComponent implements OnInit {
     this.router.navigate([`/devices/${userId}/list`]);
   }
   
-viewSessions(userId: number): void {
-  this.router.navigate(['/sessions/user', userId, 'list']);
-}
+  viewSessions(userId: number): void {
+    this.router.navigate(['/sessions/user', userId, 'list']);
+  }
+  
+  viewProfile(userId: number): void {
+    this.router.navigate(['/profiles/user', userId, 'view']);
+  }
+
+
 
   delete(id: number): void {
     Swal.fire({

@@ -1,60 +1,141 @@
-<div class="container mt-4">
-  <h2>Mi Perfil</h2>
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-5"></div>
 
-  <!-- Mostrar loading mientras se cargan los datos -->
-  <div *ngIf="!profile" class="text-center">
-    <div class="spinner-border" role="status">
-      <span class="visually-hidden">Cargando...</span>
-    </div>
-    <p>Cargando perfil...</p>
-  </div>
+<div class="container-fluid mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-10 col-xl-8">
+      <div class="card shadow border-0">
+        <div class="card-body p-4">
+          <!-- Título principal -->
+          <div class="row mb-4">
+            <div class="col-12 text-center">
+              <h1 class="display-6 text-primary fw-bold">{{ name || 'Usuario' }} - {{ getTitle() }}</h1>
+            </div>
+          </div>
 
-  <!-- Contenido solo cuando profile está cargado -->
-  <div *ngIf="profile">
-    <!-- Modo solo lectura -->
-    <div *ngIf="!editMode">
-      <div class="card p-3">
-        <div class="text-center">
-          <img [src]="profile.photo" alt="Foto de perfil" class="rounded-circle" style="width: 150px;">
-        </div>
-        <div class="mt-3">
-          <p><strong>Teléfono:</strong> {{ profile.phone }}</p>
-        </div>
-        <div class="text-center mt-3">
-          <button class="btn btn-primary" (click)="enableEdit()">Editar Perfil</button>
-        </div>
-      </div>
-    </div>
+          <div class="row align-items-start">
+            <!-- Columna izquierda: foto de perfil -->
+            <div class="col-md-4 text-center mb-4 mb-md-0">
+              <div class="d-flex flex-column align-items-center">
+                <!-- MODO VISTA: Solo mostrar imagen -->
+                <div *ngIf="isViewMode()">
+                  <img *ngIf="photo && photo.trim() !== ''; else defaultPhoto" 
+                       [src]="photo" 
+                       class="img-fluid rounded-circle shadow border border-4 border-primary"
+                       style="width: 250px; height: 250px; object-fit: cover;"
+                       alt="Foto de perfil">
+                  <ng-template #defaultPhoto>
+                    <div class="bg-light rounded-circle d-flex align-items-center justify-content-center border border-4 border-secondary"
+                         style="width: 250px; height: 250px;">
+                      <i class="fas fa-user fa-5x text-muted"></i>
+                    </div>
+                  </ng-template>
+                  <small class="text-muted mt-2">Foto de perfil</small>
+                </div>
 
-    <!-- Formulario de edición -->
-    <form *ngIf="editMode" [formGroup]="profileForm" (ngSubmit)="saveChanges()">
-      <div class="card p-3">
-        <div class="form-group">
-          <label for="phone">Teléfono</label>
-          <input id="phone" type="text" class="form-control" formControlName="phone">
-          <div *ngIf="profileForm.get('phone')?.invalid && profileForm.get('phone')?.touched" class="text-danger">
-            Teléfono es requerido.
+                <!-- MODO EDICIÓN: Mostrar imagen con opción de cambio -->
+                <div *ngIf="isEditMode()">
+                  <img *ngIf="previewUrl && previewUrl.trim() !== ''; else defaultPhotoEdit" 
+                       [src]="previewUrl" 
+                       class="img-fluid rounded-circle shadow border border-4 border-warning"
+                       style="width: 250px; height: 250px; object-fit: cover;"
+                       alt="Vista previa">
+                  <ng-template #defaultPhotoEdit>
+                    <div class="bg-light rounded-circle d-flex align-items-center justify-content-center border border-4 border-warning"
+                         style="width: 250px; height: 250px;">
+                      <i class="fas fa-user fa-5x text-muted"></i>
+                    </div>
+                  </ng-template>
+                  
+                  <!-- Input para subir archivo -->
+                  <div class="mt-3">
+                    <label for="photoUpload" class="btn btn-outline-warning btn-sm">
+                      <i class="fas fa-camera me-2"></i>
+                      Cambiar foto
+                    </label>
+                    <input type="file" 
+                           id="photoUpload" 
+                           class="d-none" 
+                           accept="image/*" 
+                           (change)="onFileSelected($event)">
+                  </div>
+                  <small class="text-muted mt-2">Selecciona una nueva imagen</small>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Columna derecha: información del perfil -->
+            <div class="col-md-8">
+              <div class="table-responsive">
+                <table class="table table-borderless table-hover">
+                  <tbody>
+                    <tr class="border-bottom border-2 border-light">
+                      <td class="py-4 text-muted fw-bold fs-5" style="width: 30%;">
+                        <i class="fas fa-user me-3 text-primary fs-4"></i>
+                        Nombre:
+                      </td>
+                      <td class="py-4 fw-semibold fs-5">{{ name || 'No especificado' }}</td>
+                    </tr>
+                    <tr class="border-bottom border-2 border-light">
+                      <td class="py-4 text-muted fw-bold fs-5">
+                        <i class="fas fa-envelope me-3 text-primary fs-4"></i>
+                        Email:
+                      </td>
+                      <td class="py-4 fw-semibold fs-5">{{ email || 'No especificado' }}</td>
+                    </tr>
+                    <tr class="border-bottom border-2 border-light">
+                      <td class="py-4 text-muted fw-bold fs-5">
+                        <i class="fas fa-phone me-3 text-primary fs-4"></i>
+                        Celular:
+                      </td>
+                      <td class="py-4 fw-semibold fs-5">
+                        <!-- MODO VISTA: Mostrar teléfono -->
+                        <span *ngIf="isViewMode()">{{ phone || 'No especificado' }}</span>
+                        
+                        <!-- MODO EDICIÓN: Input para editar teléfono, más pequeño -->
+                        <div *ngIf="isEditMode()" class="w-100">
+                          <input type="tel" 
+                                 class="form-control form-control-sm border-2 border-warning" 
+                                 [(ngModel)]="editPhone" 
+                                 placeholder="Ingresa tu número de teléfono"
+                                 maxlength="15"
+                                 style="font-size: 0.9rem;">
+                          <small class="text-muted mt-1">Ejemplo: +57 300 123 4567</small>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              
+              <!-- Botones de acción -->
+              <div class="mt-5 d-flex flex-wrap gap-3 justify-content-start">
+                <!-- Botones en modo vista -->
+                <div *ngIf="isViewMode()">
+                  <button class="btn btn-outline-primary btn-lg px-4" (click)="editProfile()">
+                    <i class="fas fa-edit me-2"></i>
+                    Editar perfil
+                  </button>
+                  <button class="btn btn-danger btn-lg px-4" (click)="deleteProfile()">
+                    <i class="fas fa-trash me-2"></i>
+                    Eliminar perfil
+                  </button>
+                </div>
+                <!-- Botones en modo edición -->
+                <div *ngIf="isEditMode()">
+                  <button class="btn btn-success btn-lg px-4" (click)="saveChanges()">
+                    <i class="fas fa-save me-2"></i>
+                    Guardar cambios
+                  </button>
+                  <button class="btn btn-secondary btn-lg px-4" (click)="cancelEdit()">
+                    <i class="fas fa-times me-2"></i>
+                    Cancelar
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-
-        <div class="form-group mt-3">
-          <label for="photo">URL de la Foto</label>
-          <input id="photo" type="text" class="form-control" formControlName="photo">
-          <div class="text-center mt-3">
-            <img [src]="profileForm.get('photo')?.value" alt="Foto de perfil" class="rounded-circle" style="width: 150px;">
-          </div>
-        </div>
-
-        <div class="text-center mt-4">
-          <button type="submit" class="btn btn-success" [disabled]="profileForm.invalid">Guardar Cambios</button>
-          <button type="button" class="btn btn-secondary ms-2" (click)="cancelEdit()">Cancelar</button>
-        </div>
-      </div>
-    </form>
-  </div>
-
-  <!-- Mostrar error si hay problemas -->
-  <div *ngIf="errorMessage" class="alert alert-danger">
-    {{ errorMessage }}
+      </div> 
+    </div>
   </div>
 </div>

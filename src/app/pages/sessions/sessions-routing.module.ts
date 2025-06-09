@@ -5,7 +5,6 @@ import { ManageComponent } from './manage/manage.component';
 
 const routes: Routes = [
   { path: 'list', component: ListComponent },
-  // Agregamos esta ruta para listar las sesiones de un usuario específico
   { path: 'user/:userId/list', component: ListComponent },
   { path: 'user/:userId/create', component: ManageComponent },
   { path: 'view/:id', component: ManageComponent },

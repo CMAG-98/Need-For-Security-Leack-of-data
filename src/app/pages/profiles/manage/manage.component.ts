@@ -1,118 +1,228 @@
 import { Component, OnInit } from '@angular/core';
-import { ProfileService } from 'src/app/services/profile.service';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Profile } from 'src/app/models/profile';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SecurityService } from 'src/app/services/security.service';
-import { LogInUser } from 'src/app/models/log-in-user.mode';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-manage',
-  templateUrl: './manage.component.html'
+  templateUrl: './manage.component.html',
+  styleUrls: ['./manage.component.scss']
 })
 export class ManageComponent implements OnInit {
-  profile: Profile | null = null; // Inicializar como null
-  profileForm!: FormGroup;
-  editMode: boolean = false;
-  userId!: string;
-  currentUser!: LogInUser;
-  errorMessage: string = ''; // Para mostrar errores al usuario
+  profile: Profile = { id: 0, phone: '', photo: '' };
+  name = '';
+  email = '';
+  photo = '';
+  phone = '';
+  userId: string = '';
+  
+  // Modo del componente: 1 = view, 3 = update
+  mode: number = 1;
+  
+  // Variables para el modo edición
+  editPhone = '';
+  selectedFile: File | null = null;
+  previewUrl: string = '';
 
   constructor(
-    private profileService: ProfileService,
-    private fb: FormBuilder,
-    private securityService: SecurityService
-  ) {}
+    private router: Router,
+    private route: ActivatedRoute
+  ) { }
 
   ngOnInit(): void {
-    // Obtenemos la información de localStorage directamente
-    const sessionData = localStorage.getItem('sesion');
-    if (sessionData) {
-      try {
-        const userSession = JSON.parse(sessionData);
-        this.currentUser = userSession;
-        this.userId = userSession.id;
-        this.loadProfile();
-      } catch (error) {
-        console.error('Error al parsear la sesión de localStorage', error);
-        this.errorMessage = 'Error al obtener información de sesión';
+    // Determinar el modo de acuerdo a la URL
+    const currentUrl = this.route.snapshot.url.join('/');
+    if (currentUrl.includes('view')) {
+      this.mode = 1; // Modo vista
+    } else if (currentUrl.includes('update')) {
+      this.mode = 3; // Modo edición
+    }
+
+    // Obtener el userId de la ruta
+    this.userId = this.route.snapshot.paramMap.get('userId') || '';
+    
+    this.loadUserData();
+  }
+
+  loadUserData(): void {
+    const sessionStr = localStorage.getItem('sesion');
+    
+    if (sessionStr) {
+      const ses = JSON.parse(sessionStr);
+      
+      // Obtener datos directamente del localStorage
+      this.name = ses.name || '';
+      this.email = ses.email || '';
+      this.phone = ses.phone || '';
+      this.photo = ses.avatar || '';
+      
+      // Para modo edición, inicializar campos editables
+      if (this.mode === 3) {
+        this.editPhone = this.phone;
+        this.previewUrl = this.photo;
       }
+      
+      // Llenar el objeto profile
+      this.profile = {
+        id: Number(ses.id) || 0,
+        phone: this.phone,
+        photo: this.photo
+      };
+
+      console.log('Datos cargados - Modo:', this.mode === 1 ? 'Vista' : 'Edición', {
+        name: this.name,
+        email: this.email,
+        photo: this.photo,
+        phone: this.phone,
+        userId: this.userId
+      });
     } else {
-      this.errorMessage = 'No hay sesión activa';
+      // Si no hay sesión, redirigir al login
+      this.router.navigate(['/login']);
     }
   }
 
-  loadProfile(): void {
-    const numericUserId: number = Number(this.userId);
-    this.profileService.getByUserId(numericUserId).subscribe({
-      next: (data: Profile) => {
-        this.profile = data;
-        this.initializeForm();
-        this.errorMessage = ''; // Limpiar errores previos
-      },
-      error: (error) => {
-        console.error('Error al obtener el perfil', error);
-        this.errorMessage = 'Error al cargar el perfil. Verifique su conexión.';
+  // Manejar selección de archivo
+  onFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+      this.selectedFile = file;
+      
+      // Crear preview de la imagen
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.previewUrl = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Archivo inválido',
+        text: 'Por favor selecciona un archivo de imagen válido.',
+        confirmButtonColor: '#3085d6'
+      });
+    }
+  }
+
+  // Guardar cambios (modo edición)
+  saveChanges(): void {
+    if (this.mode !== 3) return;
+
+    // Validaciones básicas
+    if (!this.editPhone.trim()) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Campo requerido',
+        text: 'El teléfono es requerido.',
+        confirmButtonColor: '#3085d6'
+      });
+      return;
+    }
+
+    // Mostrar loading
+    Swal.fire({
+      title: 'Guardando cambios...',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
+    // Simular un pequeño delay para mostrar el loading
+    setTimeout(() => {
+      // Actualizar datos en localStorage
+      const sessionStr = localStorage.getItem('sesion');
+      if (sessionStr) {
+        const ses = JSON.parse(sessionStr);
+        
+        // Actualizar teléfono
+        ses.phone = this.editPhone.trim();
+        
+        // Actualizar avatar si se seleccionó una nueva imagen
+        if (this.selectedFile && this.previewUrl) {
+          ses.avatar = this.previewUrl;
+        }
+        
+        // Guardar en localStorage
+        localStorage.setItem('sesion', JSON.stringify(ses));
+        
+        // Actualizar variables locales
+        this.phone = ses.phone;
+        this.photo = ses.avatar;
+        this.profile.phone = this.phone;
+        this.profile.photo = this.photo;
+        
+        Swal.fire({
+          icon: 'success',
+          title: '¡Perfil actualizado!',
+          text: 'Los cambios se han guardado correctamente.',
+          confirmButtonColor: '#28a745'
+        }).then(() => {
+          // Redirigir a modo vista
+          this.router.navigate(['/profiles/user', this.userId, 'view']);
+        });
+      }
+    }, 1000);
+  }
+
+  // Cancelar edición
+  cancelEdit(): void {
+    // Redirigir a modo vista sin guardar cambios
+    this.router.navigate(['/profiles/user', this.userId, 'view']);
+  }
+
+  deleteProfile(): void {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Esta acción eliminará tu perfil permanentemente y no se puede deshacer.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        localStorage.removeItem('sesion');
+        
+        Swal.fire({
+          icon: 'success',
+          title: 'Perfil eliminado',
+          text: 'Tu perfil ha sido eliminado correctamente.',
+          confirmButtonColor: '#3085d6'
+        }).then(() => {
+          this.router.navigate(['/login']);
+        });
       }
     });
   }
 
-  initializeForm(): void {
-    if (this.profile) {
-      this.profileForm = this.fb.group({
-        phone: [this.profile.phone, Validators.required],
-        photo: [this.profile.photo, Validators.required]
-      });
+  editProfile(): void {
+    // Navegar a modo edición
+    if (this.userId) {
+      this.router.navigate(['/profiles/user', this.userId, 'update']);
+    } else {
+      const sessionStr = localStorage.getItem('sesion');
+      if (sessionStr) {
+        const ses = JSON.parse(sessionStr);
+        const id = ses.id || this.profile.id;
+        this.router.navigate(['/profiles/user', id, 'update']);
+      }
     }
   }
 
-  enableEdit(): void {
-    this.editMode = true;
+  // Método para obtener el título según el modo
+  getTitle(): string {
+    return this.mode === 3 ? 'Editar Perfil' : 'Ver Perfil';
   }
 
-  cancelEdit(): void {
-    this.editMode = false;
-    if (this.profile && this.profileForm) {
-      this.profileForm.patchValue({
-        phone: this.profile.phone,
-        photo: this.profile.photo
-      });
-    }
+  // Método para verificar si está en modo vista
+  isViewMode(): boolean {
+    return this.mode === 1;
   }
 
-  saveChanges(): void {
-    if (this.profileForm.valid && this.profile) {
-      const updatedProfile: Profile = {
-        ...this.profile,
-        ...this.profileForm.value
-      };
-            
-      this.profileService.update(updatedProfile).subscribe({
-        next: (data: Profile) => {
-          this.profile = data;
-          this.editMode = false;
-          // Si la foto del perfil se usa como avatar global, actualizamos también en SecurityService
-          let currentUser = this.securityService.activeUserSession;
-          if (currentUser) {
-            currentUser.avatar = data.photo; // Actualizamos el avatar global
-            this.securityService.setUser(currentUser);
-          }
-          this.errorMessage = ''; // Limpiar errores
-        },
-        error: (error) => {
-          console.error('Error al actualizar el perfil', error);
-          this.errorMessage = 'Error al actualizar el perfil. Intente nuevamente.';
-        }
-      });
-    }
-  }
-
-  // Método para obtener el nombre del usuario para mostrar en el template
-  getUserDisplayName(): string {
-    return this.currentUser ? this.currentUser.name : 'Usuario no identificado';
-  }
-
-  // Método para obtener el email del usuario
-  getUserEmail(): string {
-    return this.currentUser ? this.currentUser.email : '';
+  // Método para verificar si está en modo edición
+  isEditMode(): boolean {
+    return this.mode === 3;
   }
 }
