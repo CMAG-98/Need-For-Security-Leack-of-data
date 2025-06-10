@@ -22,7 +22,6 @@ export class AddressService {
     return this.http.get<Address>(`${environment.url_ms_security}/addresses/user/${userId}`);
   }
 
-
   create(newAddress: Address, userId: string): Observable<Address> {
     delete newAddress.id;  // Evita enviar el ID si es undefined
     console.log(newAddress);
