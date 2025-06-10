@@ -1,1 +1,121 @@
-<p>permissionsbyrole works!</p>
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8"></div>
+<!-- Page content -->
+<div class="container-fluid mt--7">
+  <div class="row">
+    <div class="col">
+      <!-- Card -->
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <div class="row align-items-center">
+            <div class="col">
+              <h3 class="mb-0">{{ roleName }} - Permisos</h3>
+            </div>
+            <div class="col-auto">
+              <button class="btn btn-sm btn-primary" (click)="loadData()" [disabled]="loading">
+                <i class="fas fa-sync" [class.fa-spin]="loading"></i> Recargar
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          
+          <!-- Loading spinner -->
+          <div *ngIf="loading" class="text-center py-4">
+            <div class="spinner-border text-primary" role="status">
+              <span class="sr-only">Cargando...</span>
+            </div>
+            <p class="mt-2">Cargando permisos...</p>
+          </div>
+
+          <!-- Mensaje cuando no hay permisos -->
+          <div *ngIf="!loading && noPermissionsFound" class="text-center py-5">
+            <div class="alert alert-warning">
+              <h5>No hay permisos configurados para este rol</h5>
+              <button 
+                class="btn btn-primary" 
+                (click)="createDefaultPermissions()">
+                <i class="fas fa-plus"></i> Crear Permisos
+              </button>
+            </div>
+          </div>
+
+          <!-- Tabla de permisos -->
+          <div *ngIf="!loading && hasPermissions()">
+            
+            <!-- Tabla responsive -->
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead class="thead-light">
+                  <tr>
+                    <th scope="col">Modelo</th>
+                    <th scope="col" class="text-center">View</th>
+                    <th scope="col" class="text-center">List</th>
+                    <th scope="col" class="text-center">Create</th>
+                    <th scope="col" class="text-center">Update</th>
+                    <th scope="col" class="text-center">Delete</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let group of groupedPermissions; let i = index">
+                    <td>
+                      <strong class="text-capitalize">{{ group.entity }}</strong>
+                    </td>
+                    
+                    <!-- View Permission -->
+                    <td class="text-center">
+                      <input 
+                        type="checkbox"
+                        [checked]="getPermissionByMethod(group, 'VIEW')?.has_permission || false"
+                        (change)="togglePermission(i, 'VIEW')" />
+                    </td>
+                    
+                    <!-- List Permission -->
+                    <td class="text-center">
+                      <input 
+                        type="checkbox"
+                        [checked]="getPermissionByMethod(group, 'LIST')?.has_permission || false"
+                        (change)="togglePermission(i, 'LIST')" />
+                    </td>
+                    
+                    <!-- Create Permission -->
+                    <td class="text-center">
+                      <input 
+                        type="checkbox"
+                        [checked]="getPermissionByMethod(group, 'CREATE')?.has_permission || false"
+                        (change)="togglePermission(i, 'CREATE')" />
+                    </td>
+                    
+                    <!-- Update Permission -->
+                    <td class="text-center">
+                      <input 
+                        type="checkbox"
+                        [checked]="getPermissionByMethod(group, 'UPDATE')?.has_permission || false"
+                        (change)="togglePermission(i, 'UPDATE')" />
+                    </td>
+                    
+                    <!-- Delete Permission -->
+                    <td class="text-center">
+                      <input 
+                        type="checkbox"
+                        [checked]="getPermissionByMethod(group, 'DELETE')?.has_permission || false"
+                        (change)="togglePermission(i, 'DELETE')" />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Botón de guardar -->
+            <div class="mt-4 text-center">
+              <button 
+                class="btn btn-success btn-lg" 
+                (click)="saveChanges()">
+                <i class="fas fa-save"></i> Guardar Cambios
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

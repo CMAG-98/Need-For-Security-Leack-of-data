@@ -44,6 +44,10 @@ export class RoleListComponent implements OnInit {
     this.router.navigate(['/roles/view/' + id]);
   }
 
+  viewPermissions(roleId: number): void {
+    this.router.navigate(['/role-permissions/permissions-by-role', roleId]);
+  }
+
   edit(id: number): void {
     this.router.navigate(['/roles/update/' + id]);
   }

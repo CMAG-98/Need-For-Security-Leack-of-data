@@ -13,5 +13,6 @@ export interface RolePermission {
     id: number;
     url: string;
     method: string;
+    entity: string;
   };
 }

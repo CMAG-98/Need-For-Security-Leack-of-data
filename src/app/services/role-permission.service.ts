@@ -27,11 +27,4 @@ export class RolePermissionService {
     return this.http.delete<RolePermission>(`${environment.url_ms_security}/api/role-permissions/role/${roleId}/permission/${permissionId}`);
   }
 
-  getByRoleId(roleId: number): Observable<RolePermission[]> {
-    return this.http.get<RolePermission[]>(`${environment.url_ms_security}/api/role-permissions?roleId=${roleId}`);
-  }
-
-  getByPermissionId(permissionId: number): Observable<RolePermission[]> {
-    return this.http.get<RolePermission[]>(`${environment.url_ms_security}/api/role-permissions?permissionId=${permissionId}`);
-  }
 }

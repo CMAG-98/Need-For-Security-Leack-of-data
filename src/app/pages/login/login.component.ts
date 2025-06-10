@@ -73,8 +73,10 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.securityService.saveSession({ user: googleUser, token: googleToken });
 
         setTimeout(() => {
-          this.router.navigate(['/dashboard']);
-        }, 50);
+          this.router.navigate(['/dashboard']).then(() => {
+            window.location.reload();
+          });
+        }, 50)
       })
       .catch(error => {
         console.error('Token Google inválido', error);

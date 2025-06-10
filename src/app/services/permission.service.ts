@@ -30,8 +30,9 @@ export class PermissionService {
   delete(id: number): Observable<Permission> {
     return this.http.delete<Permission>(`${environment.url_ms_security}/permissions/${id}`);
   }
-
+  
   getGroupedByRole(roleId: number): Observable<any> {
     return this.http.get<any>(`${environment.url_ms_security}/permissions/grouped/role/${roleId}`);
   }
+
 }

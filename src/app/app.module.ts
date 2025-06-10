@@ -17,8 +17,6 @@ import { AuthenticatedGuard } from './guards/authenticated.guard';
 import { NoAuthenticatedGuard } from './guards/no-authenticated.guard';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { PasswordListByUserComponent } from './pages/passwords/password-list-by-user/password-list-by-user.component';
-import { ListComponent } from './pages/role-permissions/list/list.component';
-import { ManageComponent } from './pages/role-permissions/manage/manage.component';
 
 
 
